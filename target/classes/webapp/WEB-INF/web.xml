@@ -1,6 +1,4 @@
-<!DOCTYPE web-app PUBLIC
- "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
- "http://java.sun.com/dtd/web-app_2_3.dtd" >
+<?xml version="1.0" encoding="UTF-8"?>
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
@@ -11,5 +9,21 @@
   <servlet-mapping>
     <servlet-name>update</servlet-name>
     <url-pattern>/update</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>getdata</servlet-name>
+    <servlet-class>team.nnmm.servlet.GetDataServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getdata</servlet-name>
+    <url-pattern>/getdata</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>getDict</servlet-name>
+    <servlet-class>team.nnmm.servlet.GetDictServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getDict</servlet-name>
+    <url-pattern>/getDict</url-pattern>
   </servlet-mapping>
 </web-app>

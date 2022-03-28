@@ -1,6 +1,7 @@
 package team.nnmm.servlet;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * @author Patrick_Star
@@ -8,6 +9,15 @@ import java.io.Serializable;
  */
 public class MessageBean implements Serializable {
     private String message;
+    private ArrayList data;
+
+    public ArrayList getData() {
+        return data;
+    }
+
+    public void setData(ArrayList data) {
+        this.data = data;
+    }
 
     public String getMessage() {
         return message;
@@ -20,7 +30,8 @@ public class MessageBean implements Serializable {
     public MessageBean() {
     }
 
-    public MessageBean(String message) {
+    public MessageBean(String message, ArrayList data) {
         this.message = message;
+        this.data = data;
     }
 }
