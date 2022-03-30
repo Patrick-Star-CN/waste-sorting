@@ -47,30 +47,58 @@ export default function Tetris(props: any) {
       alert('还没有选择呢！');
       return;
     }
-    console.log('col', col, 'rol', rol);
     let width = WasteType[wasteList[curSelect - 1].type - 1].width;
     let height = WasteType[wasteList[curSelect - 1].type - 1].height;
-    console.log('height', height);
-    let curColMax = dataContext.storeTop[col] + height;
+    let curRolMax = dataContext.storeTop[col] + height;
     let toggleStoreTop = dataContext.toggleStoreTop;
     let toggleWasteList = dataContext.toggleWasteList;
     let toggleBoxList = dataContext.toggleBoxList;
 
     if (width === 1) {
-      if (curColMax <= 6) {
-        toggleWasteList(curSelect - 1, col * 6 + curColMax);
+      if (curRolMax <= 6) {
+        toggleWasteList(curSelect - 1, col * 6 + curRolMax);
 
-        for (let i = dataContext.storeTop[col]; i < curColMax; i++) {
+        for (let i = dataContext.storeTop[col]; i < curRolMax; i++) {
           toggleBoxList(i, col, curSelect, wasteList[curSelect - 1].type);
         }
-        toggleStoreTop(curColMax, col);
+        toggleStoreTop(curRolMax, col);
       } else {
         alert('该列已经装不下了哦');
+        return;
       }
-    } else if (width === 2) {
+    } else {
+      if (curRolMax <= 6) {
+        toggleWasteList(curSelect - 1, col * 6 + curRolMax);
+        let newRol = rol;
+        let newCol = col;
+        if (newCol + width >= 4) newCol = 4 - width; // 矫正
+        // console.log("max", Math.max(...dataContext.storeTop.slice(newCol, newCol + width)));
+        newRol =
+          Math.max(...dataContext.storeTop.slice(newCol, newCol + width)) +
+          height -
+          1;
+        if (newRol >= 6) {
+          alert('这样子好像装不下了哦');
+          return;
+        }
+        // console.log("newRol", newRol);
+        // console.log("height", height);
+
+        for (let i = newRol; i >= newRol - height + 1; i--) {
+          for (let j = newCol; j <= newCol + width - 1; j++) {
+            toggleBoxList(i, j, curSelect, wasteList[curSelect - 1].type);
+          }
+        }
+        for (let i = newCol; i <= newCol + width - 1; i++)
+          toggleStoreTop(newRol + 1, i);
+      } else {
+        alert('该列已经装不下了哦');
+        return;
+      }
+      // TODO:
     }
-    // if (WasteType[wasteList[curSelect - 1].type - 1].width === 1)
-    console.log('curColMax', curColMax);
+    console.log('你放置了', height, '*', width, '的垃圾');
+    console.log('垃圾桶状态为', dataContext.storeTop);
     setCurSelect(0);
   }
   useEffect(() => {
@@ -91,7 +119,7 @@ export default function Tetris(props: any) {
           <div className="box-col" key={indexCol}>
             {boxCol.map((box: any[], indexRol: number) => (
               <div
-                className="box"
+                className={box.refer !== 0 ? 'box used' : 'box'}
                 key={indexCol * 4 + indexRol}
                 onClick={() => place(indexCol, indexRol)}
               >

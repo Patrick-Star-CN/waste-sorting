@@ -11,8 +11,8 @@ const initialStoreTop = [0, 0, 0, 0];
 const initialWasteList = [
   { id: 1, type: 5, used: -1 },
   { id: 2, type: 1, used: -1 },
-  { id: 3, type: 1, used: -1 },
-  { id: 4, type: 6, used: -1 },
+  { id: 3, type: 8, used: -1 },
+  { id: 4, type: 4, used: -1 },
   { id: 5, type: 6, used: -1 },
   { id: 6, type: 6, used: -1 },
   { id: 7, type: 9, used: -1 },
@@ -74,7 +74,7 @@ export default function IndexPage() {
     setScore(score);
   };
   let toggleStoreTop = (top: number, col: number) => {
-    console.log('top:', top, 'col:', col);
+    // console.log('top:', top, 'col:', col);
     setStoreTop((state) => {
       let new_state = state;
       new_state[col] = top;
@@ -91,17 +91,14 @@ export default function IndexPage() {
     setBoxList((state) => {
       let new_state = state;
       new_state[col][rol] = { refer, type };
-      console.log(rol, col);
       return new_state;
     });
-    console.log(boxList);
   };
   let toggleWasteList = (num: number, pos: number) => {
     setWasteList((state) => {
       let new_state = state;
       // TODO: id undefined
       new_state[num].used = pos;
-      console.log(new_state[num]);
       return new_state;
     });
   };

@@ -34,3 +34,7 @@
 .selected {
     box-shadow: inset 1px 1px 10px 2px #409eff;
 }
+
+.used {
+  background-color: yellow;
+}
