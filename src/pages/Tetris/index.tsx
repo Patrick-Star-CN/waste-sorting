@@ -4,13 +4,13 @@ import { WasteType } from '..';
 import './index.css';
 
 function ShowCase(props: any) {
-  let wasteList = useContext(DataContext).wasteList;
+  let dataContext = useContext(DataContext);
+  let wasteList = dataContext.wasteList;
   // props.toggleCurSelect(3);
   return (
     <div className="showcase">
       {wasteList.map((item, index) => {
-        // let stled
-        if (!item.used)
+        if (item.used === -1)
           return (
             <div
               className={
@@ -21,9 +21,13 @@ function ShowCase(props: any) {
               key={index}
               onClick={() => props.toggleCurSelect(item.id)}
             >
-              {item.id}
+              #{item.id}
               <br />
-              {item.type}
+              {WasteType[item.type - 1].name}
+              <br />
+              width:{WasteType[item.type - 1].width}
+              <br />
+              height:{WasteType[item.type - 1].height}
             </div>
           );
       })}
@@ -39,18 +43,35 @@ export default function Tetris(props: any) {
     setCurSelect(id);
   }
   function place(col: number, rol: number) {
-    console.log(col, rol);
-    if (curSelect) {
-      let width = WasteType[wasteList[curSelect - 1].type - 1].width;
-      let height = WasteType[wasteList[curSelect - 1].type - 1].height;
-      let curColMax = dataContext.storeTop[col] + height;
-      console.log('height', height);
-      let toggleStoreTop = dataContext.toggleStoreTop;
+    if (!curSelect) {
+      alert('还没有选择呢！');
+      return;
+    }
+    console.log('col', col, 'rol', rol);
+    let width = WasteType[wasteList[curSelect - 1].type - 1].width;
+    let height = WasteType[wasteList[curSelect - 1].type - 1].height;
+    console.log('height', height);
+    let curColMax = dataContext.storeTop[col] + height;
+    let toggleStoreTop = dataContext.toggleStoreTop;
+    let toggleWasteList = dataContext.toggleWasteList;
+    let toggleBoxList = dataContext.toggleBoxList;
+
+    if (width === 1) {
       if (curColMax <= 6) {
+        toggleWasteList(curSelect - 1, col * 6 + curColMax);
+
+        for (let i = dataContext.storeTop[col]; i < curColMax; i++) {
+          toggleBoxList(i, col, curSelect, wasteList[curSelect - 1].type);
+        }
         toggleStoreTop(curColMax, col);
-      } else return;
+      } else {
+        alert('该列已经装不下了哦');
+      }
+    } else if (width === 2) {
     }
     // if (WasteType[wasteList[curSelect - 1].type - 1].width === 1)
+    console.log('curColMax', curColMax);
+    setCurSelect(0);
   }
   useEffect(() => {
     /* for (let i = 0; i < 4; i++)
@@ -74,9 +95,9 @@ export default function Tetris(props: any) {
                 key={indexCol * 4 + indexRol}
                 onClick={() => place(indexCol, indexRol)}
               >
-                {indexCol * 4 + indexRol}
+                #{indexCol * 6 + indexRol}
                 <br />
-                {box.refer}
+                refer:{box.refer}
               </div>
             ))}
           </div>

@@ -9,22 +9,22 @@ const initialRecord = 0;
 const initialScore = 0;
 const initialStoreTop = [0, 0, 0, 0];
 const initialWasteList = [
-  { id: 1, type: 6, used: 0 },
-  { id: 2, type: 1, used: 0 },
-  { id: 3, type: 2, used: 0 },
-  { id: 4, type: 1, used: 0 },
-  { id: 5, type: 7, used: 0 },
-  { id: 6, type: 1, used: 1 },
-  { id: 7, type: 1, used: 1 },
-  { id: 8, type: 1, used: 0 },
-  { id: 9, type: 1, used: 0 },
-  { id: 10, type: 1, used: 0 },
+  { id: 1, type: 5, used: -1 },
+  { id: 2, type: 1, used: -1 },
+  { id: 3, type: 1, used: -1 },
+  { id: 4, type: 6, used: -1 },
+  { id: 5, type: 6, used: -1 },
+  { id: 6, type: 6, used: -1 },
+  { id: 7, type: 9, used: -1 },
+  { id: 8, type: 1, used: -1 },
+  { id: 9, type: 1, used: -1 },
+  { id: 10, type: 1, used: -1 },
 ]; // TODO:
 const initialBoxList: any[] = [];
 for (let i = 0; i < 4; i++) {
   let arr: any[] = [];
   for (let j = 0; j < 6; j++) {
-    arr.push({ refer: 0, type: 1 });
+    arr.push({ refer: 0, type: 0 });
   }
   initialBoxList.push(arr);
 }
@@ -42,18 +42,18 @@ const initialData = {
   toggleWasteList: (id: number, pos: number) => {},
 };
 export const WasteType = [
-  { id: 1, name: '较完整的玻璃制品', type: 1, width: 2, height: 1 },
-  { id: 2, name: '较完整的塑料制品', type: 1, width: 1, height: 2 },
+  { id: 1, name: '较完整的玻璃制品', type: 2, width: 1, height: 2 },
+  { id: 2, name: '较完整的塑料制品', type: 1, width: 1, height: 1 },
   { id: 3, name: '毛绒玩具', type: 1, width: 2, height: 2 },
   { id: 4, name: '旧书', type: 1, width: 2, height: 2 },
   { id: 5, name: '易拉罐', type: 1, width: 1, height: 1 },
-  { id: 6, name: '皮鞋', type: 1, width: 1, height: 3 },
-  { id: 7, name: '大骨头', type: 1, width: 3, height: 1 },
-  { id: 8, name: '鱼骨', type: 1, width: 1, height: 2 },
+  { id: 6, name: '皮鞋', type: 1, width: 3, height: 1 },
+  { id: 7, name: '大骨头', type: 1, width: 1, height: 3 },
+  { id: 8, name: '鱼骨', type: 1, width: 2, height: 1 },
   { id: 9, name: '烟蒂', type: 1, width: 1, height: 1 },
-  { id: 10, name: '碎碗碟', type: 1, width: 1, height: 2 },
+  { id: 10, name: '碎碗碟', type: 1, width: 2, height: 1 },
   { id: 11, name: '电池', type: 1, width: 1, height: 1 },
-  { id: 12, name: '灯泡', type: 1, width: 1, height: 2 },
+  { id: 12, name: '灯泡', type: 1, width: 2, height: 1 },
   { id: 13, name: '过期药物', type: 1, width: 1, height: 1 },
   { id: 14, name: '牛奶纸盒', type: 1, width: 1, height: 1 },
 ];
@@ -74,7 +74,7 @@ export default function IndexPage() {
     setScore(score);
   };
   let toggleStoreTop = (top: number, col: number) => {
-    console.log(top, col);
+    console.log('top:', top, 'col:', col);
     setStoreTop((state) => {
       let new_state = state;
       new_state[col] = top;
@@ -87,19 +87,21 @@ export default function IndexPage() {
     refer: number,
     type: number,
   ) => {
+    // console.log(rol, col, refer, type);
     setBoxList((state) => {
       let new_state = state;
-      new_state[rol][col] = { refer, type };
+      new_state[col][rol] = { refer, type };
+      console.log(rol, col);
       return new_state;
     });
+    console.log(boxList);
   };
-  let toggleWasteList = (id: number, pos: number) => {
+  let toggleWasteList = (num: number, pos: number) => {
     setWasteList((state) => {
       let new_state = state;
-      if (new_state[id] === undefined) {
-        new_state.push({ id: new_state.length, type: 1, used: pos });
-      } else new_state[id].used = pos;
-      console.log(new_state);
+      // TODO: id undefined
+      new_state[num].used = pos;
+      console.log(new_state[num]);
       return new_state;
     });
   };
