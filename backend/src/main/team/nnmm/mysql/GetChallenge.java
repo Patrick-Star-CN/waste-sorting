@@ -1,5 +1,6 @@
 package team.nnmm.mysql;
 
+import team.nnmm.servlet.ChallengeBean;
 import team.nnmm.servlet.WasteBean;
 
 import java.sql.Connection;
@@ -7,24 +8,32 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Random;
 
 /**
  * @author Patrick_Star
  * @version 1.0
  */
-public class GetDict {
-    public static ArrayList<WasteBean> getDict(Connection conn) {
+public class GetChallenge {
+    public static ArrayList getArray (Connection conn) {
         PreparedStatement psql = null;
         ResultSet re = null;
-        ArrayList<WasteBean> result = new ArrayList<>();
+        ArrayList<ChallengeBean> result = new ArrayList<>();
         try {
             String sql = "select * from wastedata";
-            psql = conn.prepareStatement(sql);
+            psql = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             re = psql.executeQuery();
             if(re.isBeforeFirst()) {
-                while(re.next()) {
-                    WasteBean result_ = new WasteBean(re.getString("name"), re.getInt("id"), re.getInt("width"), re.getInt("height"), re.getString("type"));
+                re.last();
+                int length = re.getRow();
+                int n = 0;
+                long  t = System.currentTimeMillis();
+                Random rand = new Random(t);
+                while(n < 30) {
+                    ChallengeBean result_ = new ChallengeBean(rand.nextInt(length - 1) + 1);
                     result.add(result_);
+                    n ++;
                 }
             } else {
                 result = null;
@@ -34,5 +43,8 @@ public class GetDict {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private GetChallenge() {
     }
 }

@@ -11,12 +11,12 @@
     <url-pattern>/update</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>getdata</servlet-name>
+    <servlet-name>getData</servlet-name>
     <servlet-class>team.nnmm.servlet.GetDataServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>getdata</servlet-name>
-    <url-pattern>/getdata</url-pattern>
+    <servlet-name>getData</servlet-name>
+    <url-pattern>/getData</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>getDict</servlet-name>
@@ -25,5 +25,13 @@
   <servlet-mapping>
     <servlet-name>getDict</servlet-name>
     <url-pattern>/getDict</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>getChallenge</servlet-name>
+    <servlet-class>team.nnmm.servlet.GetChallengeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getChallenge</servlet-name>
+    <url-pattern>/getChallenge</url-pattern>
   </servlet-mapping>
 </web-app>
