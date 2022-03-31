@@ -1,0 +1,40 @@
+.tetris{
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+.box {
+
+  height: calc(25vw - 1.5vh) ;
+  width: calc(25vw - 1.5vh);
+  border: 1px solid black;
+}
+
+.box-col {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.showcase {
+  display: flex;
+  overflow: scroll;
+  margin : 0 3vh;
+  align-items: center;
+}
+
+.waste-item {
+  flex: 0 0 100px;
+  height: 15vh;
+  border: 1px solid black;
+  margin: 0 5px;
+}
+
+.selected {
+    box-shadow: inset 1px 1px 10px 2px #409eff;
+}
+
+.used {
+  background-color: yellow;
+}
