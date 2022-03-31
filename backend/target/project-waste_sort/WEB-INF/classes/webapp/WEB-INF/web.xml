@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+    <servlet-name>update</servlet-name>
+    <servlet-class>team.nnmm.servlet.UpdateServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>update</servlet-name>
+    <url-pattern>/update</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>getData</servlet-name>
+    <servlet-class>team.nnmm.servlet.GetDataServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getData</servlet-name>
+    <url-pattern>/getData</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>getDict</servlet-name>
+    <servlet-class>team.nnmm.servlet.GetDictServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getDict</servlet-name>
+    <url-pattern>/getDict</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>getChallenge</servlet-name>
+    <servlet-class>team.nnmm.servlet.GetChallengeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getChallenge</servlet-name>
+    <url-pattern>/getChallenge</url-pattern>
+  </servlet-mapping>
+</web-app>
