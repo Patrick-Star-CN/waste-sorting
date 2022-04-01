@@ -1,3 +1,14 @@
 .showcase {
-  
+  display: flex;
+  overflow: scroll;
+}
+
+.waste-item {
+  flex: 0 0 100px;
+  height: 15vh;
+  border: 1px solid black;
+}
+
+.selected {
+  box-shadow: inset 1px 1px 10px 2px #409eff;
 }

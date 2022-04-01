@@ -1,0 +1,12 @@
+.bins {
+  display: flex;
+  flex-wrap: wrap;
+  height: 60vh;
+}
+
+.bin {
+  width: 50%;
+  height: 50%;
+  background-color: lightgray;
+  border: 1px solid black;
+}
