@@ -1,20 +1,23 @@
 import './index.css';
 import { Card } from 'antd';
 import { DataContext } from '@/pages';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { WasteType } from '@/pages';
 
 export default function ShowCase(props: any) {
   let dataContext = useContext(DataContext);
   let wasteList = dataContext.wasteList;
-  // props.toggleCurSelect(3);
+
   return (
     <>
       <Card>
         <h2>待选择垃圾</h2>
         <div className="showcase">
           {wasteList.map((item, index) => {
-            if (item.used === -1)
+            if (
+              (dataContext.step === 1 && item.used === -1) ||
+              (dataContext.step === 2 && item.used >= 0)
+            )
               return (
                 <div
                   className={

@@ -89,15 +89,15 @@ export default function IndexPage() {
     });
   };
   let toggleBoxList = (
-    rol: number,
     col: number,
+    rol: number,
     refer: number,
     type: number,
   ) => {
-    // console.log(rol, col, refer, type);
     setBoxList((state) => {
       let new_state = state;
       new_state[col][rol] = { refer, type };
+      // console.log(new_state)
       return new_state;
     });
   };

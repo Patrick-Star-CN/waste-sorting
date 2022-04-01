@@ -1,9 +1,10 @@
 import { Card, Button } from 'antd';
 import './index.css';
-import { useState, useContext } from 'react';
+import { useState, useContext, createContext } from 'react';
 import { DataContext } from '@/pages';
 import { WasteType } from '@/pages';
 
+const TotalContext = createContext(0);
 const binInfo = [
   {
     name: '可回收垃圾',
@@ -29,15 +30,30 @@ const binInfo = [
 
 function Bin(props: any) {
   const dataContext = useContext(DataContext);
+  let total = useContext(TotalContext);
 
   function judge() {
+    let { toggleWasteList, toggleCurSelect } = dataContext;
+    if (dataContext.curSelect === 0) {
+      alert('你没有选择呢');
+      return;
+    }
     if (
       props.type !=
       WasteType[dataContext.wasteList[dataContext.curSelect - 1].type - 1].type
     )
       console.log(binInfo[props.type - 1].info);
-    else console.log('ok');
-    // console.log(WasteType[dataContext.wasteList[dataContext.curSelect - 1].type - 1].type)
+    else {
+      console.log(
+        '你成功回收了',
+        binInfo[props.type - 1].name,
+        WasteType[dataContext.wasteList[dataContext.curSelect - 1].type - 1]
+          .name,
+      );
+      toggleWasteList(dataContext.curSelect - 1, -2);
+      toggleCurSelect(0);
+      if (--total === 0) dataContext.toggleStep();
+    } // console.log(WasteType[dataContext.wasteList[dataContext.curSelect - 1].type - 1].type)
   }
 
   return (
@@ -48,16 +64,20 @@ function Bin(props: any) {
   );
 }
 
-export default function Bins() {
+export default function Bins(props: any) {
+  const dataContext = useContext(DataContext);
+  let total = dataContext.wasteList.filter((item) => item.used >= 0).length;
+
   return (
     <Card>
       <h2>垃圾分类</h2>
-      <Button>？？？</Button>
-      <div className="bins">
-        {binInfo.map((item) => (
-          <Bin key={item.type} type={item.type} />
-        ))}
-      </div>
+      <TotalContext.Provider value={total}>
+        <div className="bins">
+          {binInfo.map((item) => (
+            <Bin key={item.type} type={item.type} />
+          ))}
+        </div>
+      </TotalContext.Provider>
     </Card>
   );
 }

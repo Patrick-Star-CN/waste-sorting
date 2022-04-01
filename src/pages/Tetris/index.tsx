@@ -7,7 +7,14 @@ import './index.css';
 export default function Tetris(props: any) {
   let dataContext = useContext(DataContext);
   let wasteList = dataContext.wasteList;
+  useEffect(() => {
+    return () => {
+      for (let i = 0; i < 4; i++)
+        for (let j = 0; j < 6; j++) dataContext.toggleBoxList(i, j, 0, 0);
 
+      for (let i = 0; i < 4; i++) dataContext.toggleStoreTop(0, i);
+    };
+  }, []);
   function place(col: number, rol: number) {
     if (!dataContext.curSelect) {
       alert('还没有选择呢！');
@@ -27,8 +34,8 @@ export default function Tetris(props: any) {
 
         for (let i = dataContext.storeTop[col]; i < curRolMax; i++) {
           toggleBoxList(
-            i,
             col,
+            i,
             dataContext.curSelect,
             wasteList[dataContext.curSelect - 1].type,
           );
@@ -56,8 +63,18 @@ export default function Tetris(props: any) {
         // console.log("newRol", newRol);
         // console.log("height", height);
 
-        for (let i = newRol; i >= newRol - height + 1; i--) {
+        /* for (let i = newRol; i >= newRol - height + 1; i--) {
           for (let j = newCol; j <= newCol + width - 1; j++) {
+            toggleBoxList(
+              i,
+              j,
+              dataContext.curSelect,
+              wasteList[dataContext.curSelect - 1].type,
+            );
+          }
+        } */
+        for (let i = newCol; i <= newCol + width - 1; i++) {
+          for (let j = newRol; j >= newRol - height + 1; j--) {
             toggleBoxList(
               i,
               j,
@@ -78,11 +95,7 @@ export default function Tetris(props: any) {
     console.log('垃圾桶状态为', dataContext.storeTop);
     dataContext.toggleCurSelect(0);
   }
-  useEffect(() => {
-    /* for (let i = 0; i < 4; i++)
-      for (let j = 0; j < 6; j++)
-        props.toggleBoxList(i, j, i, j) */
-  }, []);
+
   /*   const elem = useContext(DataContext);
     for (let i = 0; i <= 10; i++) {
       elem.toggleWasteList(1, 2);
@@ -90,34 +103,28 @@ export default function Tetris(props: any) {
   let boxList = dataContext.boxList;
   let toggleStep = dataContext.toggleStep;
   return (
-    <>
-      <Card>
-        <Space size="middle">
-          <h2>临时垃圾箱</h2>
-          <Button onClick={toggleStep}>去垃圾分类</Button>
-        </Space>
-        <div className="tetris">
-          {boxList.map((boxCol, indexCol) => (
-            <div className="box-col" key={indexCol}>
-              {boxCol.map((box: any[], indexRol: number) => (
-                <div
-                  className={box.refer !== 0 ? 'box used' : 'box'}
-                  key={indexCol * 4 + indexRol}
-                  onClick={() => place(indexCol, indexRol)}
-                >
-                  #{indexCol * 6 + indexRol}
-                  <br />
-                  refer:{box.refer}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      </Card>
-      {/*       <ShowCase
-        curSelect={curSelect}
-        toggleCurSelect={toggleCurSelect}
-      ></ShowCase> */}
-    </>
+    <Card>
+      <Space size="middle">
+        <h2>临时垃圾箱</h2>
+        <Button onClick={toggleStep}>去垃圾分类</Button>
+      </Space>
+      <div className="tetris">
+        {boxList.map((boxCol, indexCol) => (
+          <div className="box-col" key={indexCol}>
+            {boxCol.map((box: any[], indexRol: number) => (
+              <div
+                className={box.refer !== 0 ? 'box used' : 'box'}
+                key={indexCol * 4 + indexRol}
+                onClick={() => place(indexCol, indexRol)}
+              >
+                #{indexCol * 6 + indexRol}
+                <br />
+                refer:{box.refer}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </Card>
   );
 }
