@@ -2,7 +2,7 @@
 
 ## 简介
 > 基于移动端开发的 H5 益智类小游戏，用于宣传垃圾分类
-
+>
 > 我是一个垃圾桶，志愿者要使用我来暂存小区地上散落的垃圾。
 
 ## 背景 & 规则
@@ -16,11 +16,27 @@
 Install dependencies,
 
 ```bash
-$ yarn
+yarn
 ```
 
 Start the dev server,
 
 ```bash
-$ yarn start
+yarn start
 ```
+## Solutions for common errors
+> These dependencies were not found:
+
+> * antd-mobile/es/button in ./src/pages/home-my/index.tsx
+> * antd-mobile/es/button/style in ./src/pages/home-my/index.tsx
+>
+>
+> 解决方法就是对插件进行一下升级：
+>
+> 如果你的项目中依赖了 @umijs/preset-react （可以在 package.json 文件中看到），那么请把它升级到最新版
+>
+> 如果你的项目中依赖了 @umijs/plugin-antd （可以在 package.json 文件中看到），那么请把它升级到最新版
+>
+> 如果你的项目中上述两个 npm 包都没有依赖，那么可以安装最新版的 @umijs/plugin-antd-mobile 插件
+>
+> 在 `.umirc.ts` 中添加 `antd: {mobile: false},`

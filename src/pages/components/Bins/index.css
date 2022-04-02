@@ -1,0 +1,24 @@
+@media screen and (max-width: 500px) {
+  .bins {
+    width: 88vw;
+  }
+}
+
+@media screen and (min-width: 500px) {
+  .bins {
+    width: calc(500px *0.88)
+  }
+}
+
+.bins {
+  display: flex;
+  flex-wrap: wrap;
+  height: 60vh;
+}
+
+.bin {
+  width: 50%;
+  height: 50%;
+  background-color: lightgray;
+  border: 1px solid black;
+}
