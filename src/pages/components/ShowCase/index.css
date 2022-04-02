@@ -4,6 +4,12 @@
   }
 }
 
+@media screen and (min-width: 500px) {
+  .showcase {
+    width: calc(500px * 0.88)
+  }
+}
+
 .showcase {
   display: flex;
   overflow: scroll;

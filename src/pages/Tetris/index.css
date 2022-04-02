@@ -3,23 +3,26 @@
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
-  margin: 2vw 0;
+  margin: 1vh 0;
+}
+
+.box {
+  border: 1px solid black;
 }
 
 @media screen and (max-width: 500px) {
   .box {
     height: 22vw;
     width: 22vw;
-    border: 1px solid black;
   }
 }
 
-/* @media screen and (min-width: 500px) {
+@media screen and (min-width: 500px) {
   .box {
-    height: ;
-    width:
+    height: calc(500px * 0.22);
+    width: calc(500px * 0.22);
   }
-} */
+}
 
 .box-col {
   display: flex;

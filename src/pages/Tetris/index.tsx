@@ -18,8 +18,8 @@ export default function Tetris(props: any) {
         Number(localStorage.getItem('WASTESORTING_RECORD')) > dataContext.score
       ) {
         localStorage.setItem('WASTESORTING_RECORD', String(dataContext.score));
-        window.location.reload();
       }
+      window.location.reload();
     }
     return () => {
       for (let i = 0; i < 4; i++)

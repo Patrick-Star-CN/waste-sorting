@@ -5,8 +5,9 @@ import Bins from './components/Bins';
 import './index.css';
 import { Layout } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
+import { Modal, Form, Input, Button, Space } from 'antd-mobile';
+import { DeleteOutline } from 'antd-mobile-icons';
 
-const userName = '夏天';
 const initialRecord = 0;
 const initialScore = 0;
 const initialStoreTop = [0, 0, 0, 0];
@@ -65,8 +66,40 @@ export let DataContext = createContext(initialData);
 export let totalAll = 0;
 export let record = 0;
 export default function IndexPage() {
+  const [form] = Form.useForm();
   useEffect(() => {
     // TODO: getData
+    if (localStorage.getItem('WASTESORTING_USERNAME') === null) {
+      Modal.alert({
+        header: <h1>👋</h1>,
+        title: '欢迎',
+        content: (
+          <Form form={form} mode="card">
+            <Form.Item
+              name="name"
+              label="昵称"
+              rules={[
+                { required: true },
+                { max: 8, message: '输入8个字符长度以下的昵称' },
+              ]}
+            >
+              <Input placeholder="昵称最多8个字符"></Input>
+            </Form.Item>
+          </Form>
+        ),
+        onConfirm: () => {
+          setUserName(form.getFieldValue('name'));
+          localStorage.setItem(
+            'WASTESORTING_USERNAME',
+            form.getFieldValue('name'),
+          );
+        },
+      });
+    } else {
+      let tmp = localStorage.getItem('WASTESORTING_USERNAME');
+      if (tmp !== null) setUserName(tmp);
+    }
+
     if (localStorage.getItem('WASTESORTING_RECORD')) {
       record = Number(localStorage.getItem('WASTESORTING_RECORD'));
       console.log(record);
@@ -80,6 +113,7 @@ export default function IndexPage() {
   let [wasteList, setWasteList] = useState(initialWasteList); // TODO: slice
   let [step, setStep] = useState(1); // 1 表示第一阶段，2 表示第二阶段
   let [curSelect, setCurSelect] = useState(0);
+  let [userName, setUserName] = useState('');
   totalAll = initialWasteList.length;
 
   let toggleScore = () => {
@@ -122,35 +156,52 @@ export default function IndexPage() {
     setStep((state) => 3 - state);
   };
 
-  return (
-    <div className="index">
-      <Layout style={{ height: '100%' }}>
-        {/* <Header style={{ background: 'white' }}>
+  if (userName)
+    return (
+      <div className="index">
+        <Layout style={{ height: '100%' }}>
+          {/* <Header style={{ background: 'white' }}>
           <span>不聪明的垃圾桶</span>
         </Header> */}
-        <Content>
-          <DataContext.Provider
-            value={{
-              score,
-              storeTop,
-              boxList,
-              wasteList,
-              curSelect,
-              step,
-              toggleScore,
-              toggleStoreTop,
-              toggleBoxList,
-              toggleWasteList,
-              toggleCurSelect,
-              toggleStep,
-            }}
-          >
-            {step == 1 ? <Tetris name={userName} /> : <Bins />}
-            <ShowCase />
-          </DataContext.Provider>
-        </Content>
-        <Footer></Footer>
-      </Layout>
-    </div>
-  );
+          <Content>
+            <DataContext.Provider
+              value={{
+                score,
+                storeTop,
+                boxList,
+                wasteList,
+                curSelect,
+                step,
+                toggleScore,
+                toggleStoreTop,
+                toggleBoxList,
+                toggleWasteList,
+                toggleCurSelect,
+                toggleStep,
+              }}
+            >
+              {step == 1 ? <Tetris name={userName} /> : <Bins />}
+              <ShowCase />
+            </DataContext.Provider>
+          </Content>
+          <Footer>
+            <Space>
+              <Button
+                size="small"
+                onClick={() => {
+                  localStorage.removeItem('WASTESORTING_RECORD');
+                  localStorage.removeItem('WASTESORTING_USERNAME');
+                  window.location.reload();
+                }}
+              >
+                <DeleteOutline />
+                清除缓存
+              </Button>
+              <span>Copyright</span>
+            </Space>
+          </Footer>
+        </Layout>
+      </div>
+    );
+  else return null;
 }
