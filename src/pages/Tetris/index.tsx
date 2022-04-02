@@ -1,20 +1,35 @@
 import { useContext, useEffect, useState } from 'react';
 import { DataContext } from '..';
 import { WasteType } from '..';
-import { Button, Space, Card } from 'antd';
+import { Button, Space, Card } from 'antd-mobile';
 import './index.css';
+import { totalAll } from '..';
 
 export default function Tetris(props: any) {
   let dataContext = useContext(DataContext);
   let wasteList = dataContext.wasteList;
+  const totalToRecycle = wasteList.filter((item) => item.used === -2).length;
+
   useEffect(() => {
+    if (totalToRecycle === totalAll) {
+      alert('game over! your step number: ' + dataContext.score);
+      if (
+        localStorage.getItem('WASTESORTING_RECORD') &&
+        Number(localStorage.getItem('WASTESORTING_RECORD')) > dataContext.score
+      ) {
+        localStorage.setItem('WASTESORTING_RECORD', String(dataContext.score));
+        window.location.reload();
+      }
+    }
     return () => {
       for (let i = 0; i < 4; i++)
         for (let j = 0; j < 6; j++) dataContext.toggleBoxList(i, j, 0, 0);
 
       for (let i = 0; i < 4; i++) dataContext.toggleStoreTop(0, i);
+      dataContext.toggleScore();
     };
-  }, []);
+  }, [totalToRecycle]);
+
   function place(col: number, rol: number) {
     if (!dataContext.curSelect) {
       alert('还没有选择呢！');
@@ -60,19 +75,6 @@ export default function Tetris(props: any) {
           alert('这样子好像装不下了哦');
           return;
         }
-        // console.log("newRol", newRol);
-        // console.log("height", height);
-
-        /* for (let i = newRol; i >= newRol - height + 1; i--) {
-          for (let j = newCol; j <= newCol + width - 1; j++) {
-            toggleBoxList(
-              i,
-              j,
-              dataContext.curSelect,
-              wasteList[dataContext.curSelect - 1].type,
-            );
-          }
-        } */
         for (let i = newCol; i <= newCol + width - 1; i++) {
           for (let j = newRol; j >= newRol - height + 1; j--) {
             toggleBoxList(
@@ -104,9 +106,26 @@ export default function Tetris(props: any) {
   let toggleStep = dataContext.toggleStep;
   return (
     <Card>
-      <Space size="middle">
-        <h2>临时垃圾箱</h2>
-        <Button onClick={toggleStep}>去垃圾分类</Button>
+      <Space block={true} justify="between">
+        <h2>{props.name}的临时垃圾箱</h2>
+        <Space>
+          <Button
+            size="small"
+            onClick={() => {
+              if (wasteList.filter((item) => item.used > 0).length === 0) {
+                alert('放点垃圾再去运输吧');
+                return;
+              } else {
+                toggleStep();
+              }
+            }}
+          >
+            🚚
+          </Button>
+          <Button size="small" color="primary">
+            排行榜
+          </Button>
+        </Space>
       </Space>
       <div className="tetris">
         {boxList.map((boxCol, indexCol) => (

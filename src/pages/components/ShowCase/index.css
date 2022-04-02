@@ -1,3 +1,9 @@
+@media screen and (max-width: 500px) {
+  .showcase {
+    width: 88vw;
+  }
+}
+
 .showcase {
   display: flex;
   overflow: scroll;

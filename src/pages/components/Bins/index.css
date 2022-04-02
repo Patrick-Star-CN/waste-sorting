@@ -1,3 +1,9 @@
+@media screen and (max-width: 500px) {
+  .bins {
+    width: 88vw;
+  }
+}
+
 .bins {
   display: flex;
   flex-wrap: wrap;

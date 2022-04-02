@@ -1,4 +1,4 @@
-import { Card, Button } from 'antd';
+import { Card, Button, Space } from 'antd-mobile';
 import './index.css';
 import { useState, useContext, createContext } from 'react';
 import { DataContext } from '@/pages';
@@ -50,8 +50,8 @@ function Bin(props: any) {
         WasteType[dataContext.wasteList[dataContext.curSelect - 1].type - 1]
           .name,
       );
-      toggleWasteList(dataContext.curSelect - 1, -2);
       toggleCurSelect(0);
+      toggleWasteList(dataContext.curSelect - 1, -2);
       if (--total === 0) dataContext.toggleStep();
     } // console.log(WasteType[dataContext.wasteList[dataContext.curSelect - 1].type - 1].type)
   }
@@ -70,14 +70,18 @@ export default function Bins(props: any) {
 
   return (
     <Card>
-      <h2>垃圾分类</h2>
-      <TotalContext.Provider value={total}>
-        <div className="bins">
-          {binInfo.map((item) => (
-            <Bin key={item.type} type={item.type} />
-          ))}
-        </div>
-      </TotalContext.Provider>
+      <Space style={{ padding: '.2rem 0' }}>
+        <h2>垃圾分类</h2>
+      </Space>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <TotalContext.Provider value={total}>
+          <div className="bins">
+            {binInfo.map((item) => (
+              <Bin key={item.type} type={item.type} />
+            ))}
+          </div>
+        </TotalContext.Provider>
+      </div>
     </Card>
   );
 }

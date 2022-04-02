@@ -1,11 +1,12 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import Tetris from './Tetris';
 import ShowCase from './components/ShowCase';
 import Bins from './components/Bins';
-// import styles from './index.less';
+import './index.css';
 import { Layout } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
 
+const userName = '夏天';
 const initialRecord = 0;
 const initialScore = 0;
 const initialStoreTop = [0, 0, 0, 0];
@@ -31,15 +32,13 @@ for (let i = 0; i < 4; i++) {
 }
 
 const initialData = {
-  record: 0,
   score: 0,
   storeTop: [0, 0, 0, 0],
   boxList: initialBoxList,
   wasteList: initialWasteList,
   curSelect: 0,
   step: 1,
-  toggleRecord: (record: number) => {},
-  toggleScore: (score: number) => {},
+  toggleScore: () => {},
   toggleStoreTop: (top: number, col: number) => {},
   toggleBoxList: (rol: number, col: number, refer: number, type: number) => {},
   toggleWasteList: (id: number, pos: number) => {},
@@ -63,9 +62,17 @@ export const WasteType = [
   { id: 14, name: '牛奶纸盒', type: 1, width: 1, height: 1 },
 ];
 export let DataContext = createContext(initialData);
-
+export let totalAll = 0;
+export let record = 0;
 export default function IndexPage() {
-  let [record, setRecord] = useState(initialRecord);
+  useEffect(() => {
+    // TODO: getData
+    if (localStorage.getItem('WASTESORTING_RECORD')) {
+      record = Number(localStorage.getItem('WASTESORTING_RECORD'));
+      console.log(record);
+    }
+  }, []);
+
   let [score, setScore] = useState(initialScore);
   let [storeTop, setStoreTop] = useState(initialStoreTop);
   // initialWasteList
@@ -73,12 +80,10 @@ export default function IndexPage() {
   let [wasteList, setWasteList] = useState(initialWasteList); // TODO: slice
   let [step, setStep] = useState(1); // 1 表示第一阶段，2 表示第二阶段
   let [curSelect, setCurSelect] = useState(0);
+  totalAll = initialWasteList.length;
 
-  let toggleRecord = (record: number) => {
-    setRecord(record);
-  };
-  let toggleScore = (score: number) => {
-    setScore(score);
+  let toggleScore = () => {
+    setScore((state) => state + 1);
   };
   let toggleStoreTop = (top: number, col: number) => {
     // console.log('top:', top, 'col:', col);
@@ -118,7 +123,7 @@ export default function IndexPage() {
   };
 
   return (
-    <div>
+    <div className="index">
       <Layout style={{ height: '100%' }}>
         {/* <Header style={{ background: 'white' }}>
           <span>不聪明的垃圾桶</span>
@@ -126,14 +131,12 @@ export default function IndexPage() {
         <Content>
           <DataContext.Provider
             value={{
-              record,
               score,
               storeTop,
               boxList,
               wasteList,
               curSelect,
               step,
-              toggleRecord,
               toggleScore,
               toggleStoreTop,
               toggleBoxList,
@@ -142,7 +145,7 @@ export default function IndexPage() {
               toggleStep,
             }}
           >
-            {step == 1 ? <Tetris /> : <Bins />}
+            {step == 1 ? <Tetris name={userName} /> : <Bins />}
             <ShowCase />
           </DataContext.Provider>
         </Content>

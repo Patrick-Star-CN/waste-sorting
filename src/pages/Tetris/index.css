@@ -3,13 +3,23 @@
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
+  margin: 2vw 0;
 }
 
-.box {
-  height: calc(25vw - 1.5vh);
-  width: calc(25vw - 1.5vh);
-  border: 1px solid black;
+@media screen and (max-width: 500px) {
+  .box {
+    height: 22vw;
+    width: 22vw;
+    border: 1px solid black;
+  }
 }
+
+/* @media screen and (min-width: 500px) {
+  .box {
+    height: ;
+    width:
+  }
+} */
 
 .box-col {
   display: flex;
