@@ -2,30 +2,27 @@ import { createContext, useEffect, useState } from 'react';
 import Tetris from './Tetris';
 import ShowCase from './components/ShowCase';
 import Bins from './components/Bins';
+import Footer from './components/Footer';
 import './index.css';
-import { Layout } from 'antd';
-const { Header, Footer, Sider, Content } = Layout;
-import { Modal, Form, Input, Button, Space } from 'antd-mobile';
-import { DeleteOutline } from 'antd-mobile-icons';
+import { Modal, Form, Input, Button, Space, ErrorBlock } from 'antd-mobile';
+import axios from 'axios';
 
-const initialRecord = 0;
+type WasteList = {
+  id: number;
+  type: number;
+  used: number;
+};
+
+export type BoxList = {
+  refer: number;
+  type: number;
+};
 const initialScore = 0;
 const initialStoreTop = [0, 0, 0, 0];
-const initialWasteList = [
-  { id: 1, type: 5, used: -1 },
-  { id: 2, type: 1, used: -1 },
-  { id: 3, type: 8, used: -1 },
-  { id: 4, type: 4, used: -1 },
-  { id: 5, type: 6, used: -1 },
-  { id: 6, type: 6, used: -1 },
-  { id: 7, type: 9, used: -1 },
-  { id: 8, type: 1, used: -1 },
-  { id: 9, type: 1, used: -1 },
-  { id: 10, type: 1, used: -1 },
-]; // TODO:
-const initialBoxList: any[] = [];
+const initialWasteList: WasteList[] = [];
+const initialBoxList: BoxList[][] = [];
 for (let i = 0; i < 4; i++) {
-  let arr: any[] = [];
+  let arr: BoxList[] = [];
   for (let j = 0; j < 6; j++) {
     arr.push({ refer: 0, type: 0 });
   }
@@ -38,7 +35,7 @@ const initialData = {
   boxList: initialBoxList,
   wasteList: initialWasteList,
   curSelect: 0,
-  step: 1,
+  step: 0,
   toggleScore: () => {},
   toggleStoreTop: (top: number, col: number) => {},
   toggleBoxList: (rol: number, col: number, refer: number, type: number) => {},
@@ -108,10 +105,9 @@ export default function IndexPage() {
 
   let [score, setScore] = useState(initialScore);
   let [storeTop, setStoreTop] = useState(initialStoreTop);
-  // initialWasteList
   let [boxList, setBoxList] = useState(initialBoxList);
-  let [wasteList, setWasteList] = useState(initialWasteList); // TODO: slice
-  let [step, setStep] = useState(1); // 1 表示第一阶段，2 表示第二阶段
+  let [step, setStep] = useState(0); // 1 表示第一阶段，2 表示第二阶段
+  let [wasteList, setWasteList] = useState(initialWasteList);
   let [curSelect, setCurSelect] = useState(0);
   let [userName, setUserName] = useState('');
   totalAll = initialWasteList.length;
@@ -140,14 +136,7 @@ export default function IndexPage() {
       return new_state;
     });
   };
-  let toggleWasteList = (num: number, pos: number) => {
-    setWasteList((state) => {
-      let new_state = state;
-      // TODO: id undefined
-      new_state[num].used = pos;
-      return new_state;
-    });
-  };
+
   let toggleCurSelect = (id: number) => {
     setCurSelect(id);
   };
@@ -156,52 +145,58 @@ export default function IndexPage() {
     setStep((state) => 3 - state);
   };
 
-  if (userName)
+  useEffect(() => {
+    async function getChallenge() {
+      await axios
+        .get('http://localhost:8080/waste-sort/getChallenge')
+        .then((response) => {
+          console.log(response);
+          for (let i = 0; i < response.data.data.length; i++) {
+            initialWasteList.push({
+              id: i + 1,
+              type: response.data.data[i].type,
+              used: -1,
+            });
+          }
+          console.log(initialWasteList);
+          setWasteList((state) => initialWasteList);
+          setStep(1);
+        });
+    }
+    getChallenge();
+  }, []);
+
+  let toggleWasteList = (num: number, pos: number) => {
+    setWasteList((state) => {
+      let new_state = state;
+      new_state[num].used = pos;
+      return new_state;
+    });
+  };
+  if (userName && step)
     return (
       <div className="index">
-        <Layout style={{ height: '100%' }}>
-          {/* <Header style={{ background: 'white' }}>
-          <span>不聪明的垃圾桶</span>
-        </Header> */}
-          <Content>
-            <DataContext.Provider
-              value={{
-                score,
-                storeTop,
-                boxList,
-                wasteList,
-                curSelect,
-                step,
-                toggleScore,
-                toggleStoreTop,
-                toggleBoxList,
-                toggleWasteList,
-                toggleCurSelect,
-                toggleStep,
-              }}
-            >
-              {step == 1 ? <Tetris name={userName} /> : <Bins />}
-              <ShowCase />
-            </DataContext.Provider>
-          </Content>
-          <Footer>
-            <Space>
-              <Button
-                size="small"
-                onClick={() => {
-                  localStorage.removeItem('WASTESORTING_RECORD');
-                  localStorage.removeItem('WASTESORTING_USERNAME');
-                  window.location.reload();
-                }}
-              >
-                <DeleteOutline />
-                清除缓存
-              </Button>
-              <span>Copyright</span>
-            </Space>
-          </Footer>
-        </Layout>
+        <DataContext.Provider
+          value={{
+            score,
+            storeTop,
+            boxList,
+            wasteList,
+            curSelect,
+            step,
+            toggleScore,
+            toggleStoreTop,
+            toggleBoxList,
+            toggleWasteList,
+            toggleCurSelect,
+            toggleStep,
+          }}
+        >
+          {step == 1 ? <Tetris name={userName} /> : <Bins />}
+          <ShowCase />
+        </DataContext.Provider>
+        <Footer />
       </div>
     );
-  else return null;
+  else return <ErrorBlock fullPage />;
 }

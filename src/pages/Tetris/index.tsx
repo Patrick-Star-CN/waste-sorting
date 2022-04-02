@@ -4,6 +4,7 @@ import { WasteType } from '..';
 import { Button, Space, Card } from 'antd-mobile';
 import './index.css';
 import { totalAll } from '..';
+import { BoxList } from '..';
 
 export default function Tetris(props: any) {
   let dataContext = useContext(DataContext);
@@ -130,7 +131,7 @@ export default function Tetris(props: any) {
       <div className="tetris">
         {boxList.map((boxCol, indexCol) => (
           <div className="box-col" key={indexCol}>
-            {boxCol.map((box: any[], indexRol: number) => (
+            {boxCol.map((box: BoxList, indexRol: number) => (
               <div
                 className={box.refer !== 0 ? 'box used' : 'box'}
                 key={indexCol * 4 + indexRol}
