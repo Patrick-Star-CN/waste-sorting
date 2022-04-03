@@ -1,10 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
 import { DataContext } from '..';
 import { WasteType } from '..';
-import { Button, Space, Card } from 'antd-mobile';
+import { Button, Space, Card, Modal } from 'antd-mobile';
 import './index.css';
 import { totalAll } from '..';
 import { BoxList } from '..';
+import Rank from '../Rank';
+import axios from 'axios';
 
 export default function Tetris(props: any) {
   let dataContext = useContext(DataContext);
@@ -15,10 +17,19 @@ export default function Tetris(props: any) {
     if (totalToRecycle === totalAll) {
       alert('game over! your step number: ' + dataContext.score);
       if (
-        localStorage.getItem('WASTESORTING_RECORD') &&
+        !localStorage.getItem('WASTESORTING_RECORD') ||
         Number(localStorage.getItem('WASTESORTING_RECORD')) > dataContext.score
       ) {
         localStorage.setItem('WASTESORTING_RECORD', String(dataContext.score));
+
+        axios({
+          method: 'post',
+          url: 'http://localhost:8080/waste-sort/update',
+          data: {
+            username: props.name,
+            score: String(dataContext.score),
+          },
+        });
       }
       window.location.reload();
     }
@@ -123,7 +134,16 @@ export default function Tetris(props: any) {
           >
             🚚
           </Button>
-          <Button size="small" color="primary">
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => {
+              Modal.show({
+                content: <Rank />,
+                closeOnMaskClick: true,
+              });
+            }}
+          >
             排行榜
           </Button>
         </Space>

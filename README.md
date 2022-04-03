@@ -1,11 +1,13 @@
 # 不聪明的垃圾桶
 
 ## 简介
+
 > 基于移动端开发的 H5 益智类小游戏，用于宣传垃圾分类
 >
 > 我是一个垃圾桶，志愿者要使用我来暂存小区地上散落的垃圾。
 
 ## 背景 & 规则
+>
 > - 各种垃圾都有不同的性质，例如大小，*可接触性*等，志愿者要根据其属性合理地将垃圾扔到桶里，
 > - 桶装载若干次垃圾后需要把垃圾按照正确的分类投放到远处相应的大垃圾桶。
 > - 然后再回到小区继续捡垃圾，重复刚才的过程直到垃圾捡完。
@@ -24,11 +26,13 @@ Start the dev server,
 ```bash
 yarn start
 ```
-## Solutions for common errors
-> These dependencies were not found:
 
-> * antd-mobile/es/button in ./src/pages/home-my/index.tsx
-> * antd-mobile/es/button/style in ./src/pages/home-my/index.tsx
+## Solutions for common errors
+
+> These dependencies were not found:
+>
+> - antd-mobile/es/button in ./src/pages/home-my/index.tsx
+> - antd-mobile/es/button/style in ./src/pages/home-my/index.tsx
 >
 >
 > 解决方法就是对插件进行一下升级：

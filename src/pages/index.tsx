@@ -17,6 +17,7 @@ export type BoxList = {
   refer: number;
   type: number;
 };
+
 const initialScore = 0;
 const initialStoreTop = [0, 0, 0, 0];
 const initialWasteList: WasteList[] = [];
