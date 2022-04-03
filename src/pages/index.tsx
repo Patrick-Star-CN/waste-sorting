@@ -18,6 +18,14 @@ export type BoxList = {
   type: number;
 };
 
+type WasteType = {
+  id: number;
+  name: string;
+  type: number;
+  width: number;
+  height: number;
+};
+
 const initialScore = 0;
 const initialStoreTop = [0, 0, 0, 0];
 const initialWasteList: WasteList[] = [];
@@ -44,22 +52,8 @@ const initialData = {
   toggleStep: () => {},
   toggleCurSelect: (id: number) => {},
 };
-export const WasteType = [
-  { id: 1, name: '较完整的玻璃制品', type: 1, width: 1, height: 2 },
-  { id: 2, name: '较完整的塑料制品', type: 1, width: 1, height: 1 },
-  { id: 3, name: '毛绒玩具', type: 1, width: 2, height: 2 },
-  { id: 4, name: '旧书', type: 1, width: 2, height: 2 },
-  { id: 5, name: '易拉罐', type: 1, width: 1, height: 1 },
-  { id: 6, name: '皮鞋', type: 1, width: 3, height: 1 },
-  { id: 7, name: '大骨头', type: 2, width: 1, height: 3 },
-  { id: 8, name: '鱼骨', type: 2, width: 2, height: 1 },
-  { id: 9, name: '烟蒂', type: 3, width: 1, height: 1 },
-  { id: 10, name: '碎碗碟', type: 3, width: 2, height: 1 },
-  { id: 11, name: '电池', type: 4, width: 1, height: 1 },
-  { id: 12, name: '灯泡', type: 4, width: 2, height: 1 },
-  { id: 13, name: '过期药物', type: 4, width: 1, height: 1 },
-  { id: 14, name: '牛奶纸盒', type: 1, width: 1, height: 1 },
-];
+
+export let WasteType: WasteType[] = [];
 export let DataContext = createContext(initialData);
 export let totalAll = 0;
 export let record = 0;
@@ -107,7 +101,7 @@ export default function IndexPage() {
   let [score, setScore] = useState(initialScore);
   let [storeTop, setStoreTop] = useState(initialStoreTop);
   let [boxList, setBoxList] = useState(initialBoxList);
-  let [step, setStep] = useState(0); // 1 表示第一阶段，2 表示第二阶段
+  let [step, setStep] = useState(-1); // 1 表示第一阶段，2 表示第二阶段
   let [wasteList, setWasteList] = useState(initialWasteList);
   let [curSelect, setCurSelect] = useState(0);
   let [userName, setUserName] = useState('');
@@ -146,24 +140,32 @@ export default function IndexPage() {
     setStep((state) => 3 - state);
   };
 
+  async function getChallenge() {
+    await axios
+      .get('http://localhost:8080/waste-sort/getChallenge')
+      .then((response) => {
+        for (let i = 0; i < response.data.data.length; i++) {
+          initialWasteList.push({
+            id: i + 1,
+            type: response.data.data[i].type,
+            used: -1,
+          });
+        }
+        setWasteList((state) => initialWasteList);
+        setStep((state) => state + 1);
+      });
+  }
+  async function getDict() {
+    await axios
+      .get('http://localhost:8080/waste-sort/getDict')
+      .then((response) => {
+        console.log(response);
+        WasteType = response.data;
+        setStep((state) => state + 1);
+      });
+  }
   useEffect(() => {
-    async function getChallenge() {
-      await axios
-        .get('http://localhost:8080/waste-sort/getChallenge')
-        .then((response) => {
-          console.log(response);
-          for (let i = 0; i < response.data.data.length; i++) {
-            initialWasteList.push({
-              id: i + 1,
-              type: response.data.data[i].type,
-              used: -1,
-            });
-          }
-          console.log(initialWasteList);
-          setWasteList((state) => initialWasteList);
-          setStep(1);
-        });
-    }
+    getDict();
     getChallenge();
   }, []);
 
