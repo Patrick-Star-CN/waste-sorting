@@ -5,6 +5,7 @@ export default function Footer() {
   return (
     <Space>
       <Button
+        color="danger"
         size="small"
         onClick={() => {
           localStorage.removeItem('WASTESORTING_RECORD');

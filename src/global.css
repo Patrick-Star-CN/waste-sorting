@@ -1,6 +1,23 @@
+:root {
+  --adm-color-default: #d5f2bb;
+  --adm-color-primary: #49aa19;
+  --adm-color-success: #00b578;
+  --adm-color-warning: #ff8f1f;
+  --adm-color-danger: #a61d24;
+  --adm-color-white: #ffffff;
+  --adm-color-weak: #999999;
+  --adm-color-light: #cccccc;
+  --adm-border-color: #eeeeee;
+  --adm-font-size-main: 13px;
+  --adm-color-text: white;
+  --adm-color-dark: black;
+}
+
 h2,
-h3 {
+h3,
+span {
   display: inline;
+  color: var(--adm-color-white);
 }
 
 h3 {
@@ -12,4 +29,30 @@ h3 {
     width: 500px;
     ;
   }
+}
+
+.adm-card {
+  color: var(--adm-color-white);
+  background-color: var(--adm-color-dark);
+}
+
+.adm-modal-body {
+  background-color: var(--adm-color-dark);
+  border: 2px solid var(--adm-color-weak);
+}
+
+.adm-list-body {
+  background-color: var(--adm-color-dark);
+}
+
+.adm-popover-arrow-icon {
+  color: var(--adm-color-weak);
+}
+
+.adm-popover-inner {
+  background-color: var(--adm-color-weak);
+}
+
+body {
+  background-color: var(--adm-color-dark);
 }

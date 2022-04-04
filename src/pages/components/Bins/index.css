@@ -20,5 +20,5 @@
   width: 50%;
   height: 50%;
   background-color: lightgray;
-  border: 1px solid black;
+  border: 1px solid var(--adm-color-white);
 }

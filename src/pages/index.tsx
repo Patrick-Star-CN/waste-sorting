@@ -16,6 +16,7 @@ type WasteList = {
 export type BoxList = {
   refer: number;
   type: number;
+  pos: number;
 };
 
 type WasteType = {
@@ -33,7 +34,7 @@ const initialBoxList: BoxList[][] = [];
 for (let i = 0; i < 4; i++) {
   let arr: BoxList[] = [];
   for (let j = 0; j < 6; j++) {
-    arr.push({ refer: 0, type: 0 });
+    arr.push({ refer: 0, type: 0, pos: 0 });
   }
   initialBoxList.push(arr);
 }
@@ -47,7 +48,13 @@ const initialData = {
   step: 0,
   toggleScore: () => {},
   toggleStoreTop: (top: number, col: number) => {},
-  toggleBoxList: (rol: number, col: number, refer: number, type: number) => {},
+  toggleBoxList: (
+    rol: number,
+    col: number,
+    refer: number,
+    type: number,
+    pos: number,
+  ) => {},
   toggleWasteList: (id: number, pos: number) => {},
   toggleStep: () => {},
   toggleCurSelect: (id: number) => {},
@@ -123,10 +130,11 @@ export default function IndexPage() {
     rol: number,
     refer: number,
     type: number,
+    pos: number,
   ) => {
     setBoxList((state) => {
       let new_state = state;
-      new_state[col][rol] = { refer, type };
+      new_state[col][rol] = { refer, type, pos };
       // console.log(new_state)
       return new_state;
     });
@@ -176,7 +184,7 @@ export default function IndexPage() {
       return new_state;
     });
   };
-  if (userName && step)
+  if (userName && step > 0)
     return (
       <div className="index">
         <DataContext.Provider

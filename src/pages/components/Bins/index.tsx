@@ -1,4 +1,4 @@
-import { Card, Button, Space } from 'antd-mobile';
+import { Card, Button, Space, Popover } from 'antd-mobile';
 import './index.css';
 import { useState, useContext, createContext } from 'react';
 import { DataContext } from '@/pages';
@@ -9,22 +9,67 @@ const binInfo = [
   {
     name: '可回收垃圾',
     type: 1,
-    info: '常见的可回收垃圾有：碎玻璃，旧衣物，废纸，金属制品，充电宝',
+    info: (
+      <>
+        常见的可回收垃圾有：
+        <ul>
+          <li>碎玻璃</li>
+          <li>旧衣物</li>
+          <li>废纸</li>
+          <li>金属制品</li>
+          <li>充电宝</li>
+        </ul>
+      </>
+    ),
   },
   {
     name: '餐余垃圾',
     type: 2,
-    info: '常见的残余垃圾有：剩菜剩饭，果皮，蛋壳，骨头，落叶',
+    info: (
+      <>
+        常见的残余垃圾有：
+        <ul>
+          <li>剩菜剩饭</li>
+          <li>果皮</li>
+          <li>蛋壳</li>
+          <li>骨头</li>
+          <li>落叶</li>
+        </ul>
+      </>
+    ),
   },
   {
     name: '其他垃圾',
     type: 3,
-    info: '常见的其他垃圾有：一次性餐具，卫生纸，尿片，污损塑料袋子，烟蒂，碎花盆，碎碗碟',
+    info: (
+      <>
+        常见的其他垃圾有：
+        <ul>
+          <li>一次性餐具</li>
+          <li>卫生纸</li>
+          <li>尿片</li>
+          <li>污损塑料袋子</li>
+          <li>烟蒂</li>
+          <li>碎花盆</li>
+          <li>碎碗碟</li>
+        </ul>
+      </>
+    ),
   },
   {
     name: '有害垃圾',
     type: 4,
-    info: '常见的有害垃圾有：干电池，过期药物，废灯泡，水银温度计',
+    info: (
+      <>
+        常见的有害垃圾有：
+        <ul>
+          <li>干电池</li>
+          <li>过期药物</li>
+          <li>废灯泡</li>
+          <li>水银温度计</li>
+        </ul>
+      </>
+    ),
   },
 ];
 
@@ -53,14 +98,21 @@ function Bin(props: any) {
       toggleCurSelect(0);
       toggleWasteList(dataContext.curSelect - 1, -2);
       if (--total === 0) dataContext.toggleStep();
-    } // console.log(WasteType[dataContext.wasteList[dataContext.curSelect - 1].type - 1].type)
+    }
   }
 
   return (
-    <div className="bin" onClick={judge}>
-      <img></img>
-      {binInfo[props.type - 1].name}
-    </div>
+    <Popover
+      content={props.info}
+      trigger="click"
+      placement="bottomLeft"
+      visible={dataContext.curSelect ? undefined : false}
+    >
+      <div className="bin" onClick={judge}>
+        <img></img>
+        {binInfo[props.type - 1].name}
+      </div>
+    </Popover>
   );
 }
 
@@ -77,7 +129,7 @@ export default function Bins(props: any) {
         <TotalContext.Provider value={total}>
           <div className="bins">
             {binInfo.map((item) => (
-              <Bin key={item.type} type={item.type} />
+              <Bin key={item.type} type={item.type} info={item.info} />
             ))}
           </div>
         </TotalContext.Provider>

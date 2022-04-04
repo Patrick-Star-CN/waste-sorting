@@ -18,7 +18,7 @@
 .waste-item {
   flex: 0 0 100px;
   height: 15vh;
-  border: 1px solid black;
+  border: 1px solid var(--adm-color-white);
 }
 
 .selected {

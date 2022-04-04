@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
 import { DataContext } from '..';
 import { WasteType } from '..';
-import { Button, Space, Card, Modal } from 'antd-mobile';
+import { Button, Space, Card, Modal, Image } from 'antd-mobile';
 import './index.css';
 import { totalAll } from '..';
 import { BoxList } from '..';
+import Img from '../components/Img';
 import Rank from '../Rank';
 import axios from 'axios';
 
@@ -35,7 +36,7 @@ export default function Tetris(props: any) {
     }
     return () => {
       for (let i = 0; i < 4; i++)
-        for (let j = 0; j < 6; j++) dataContext.toggleBoxList(i, j, 0, 0);
+        for (let j = 0; j < 6; j++) dataContext.toggleBoxList(i, j, 0, 0, 0);
 
       for (let i = 0; i < 4; i++) dataContext.toggleStoreTop(0, i);
       dataContext.toggleScore();
@@ -59,12 +60,14 @@ export default function Tetris(props: any) {
       if (curRolMax <= 6) {
         toggleWasteList(dataContext.curSelect - 1, col * 6 + curRolMax);
 
+        let index = 1;
         for (let i = dataContext.storeTop[col]; i < curRolMax; i++) {
           toggleBoxList(
             col,
             i,
             dataContext.curSelect,
             wasteList[dataContext.curSelect - 1].type,
+            index++,
           );
         }
         toggleStoreTop(curRolMax, col);
@@ -78,7 +81,6 @@ export default function Tetris(props: any) {
         let newRol = rol;
         let newCol = col;
         if (newCol + width >= 4) newCol = 4 - width; // 矫正
-        // console.log("max", Math.max(...dataContext.storeTop.slice(newCol, newCol + width)));
         newRol =
           Math.max(...dataContext.storeTop.slice(newCol, newCol + width)) +
           height -
@@ -87,13 +89,15 @@ export default function Tetris(props: any) {
           alert('这样子好像装不下了哦');
           return;
         }
+        let index = 1;
         for (let i = newCol; i <= newCol + width - 1; i++) {
-          for (let j = newRol; j >= newRol - height + 1; j--) {
+          for (let j = newRol - height + 1; j <= newRol; j++) {
             toggleBoxList(
               i,
               j,
               dataContext.curSelect,
               wasteList[dataContext.curSelect - 1].type,
+              index++,
             );
           }
         }
@@ -110,10 +114,6 @@ export default function Tetris(props: any) {
     dataContext.toggleCurSelect(0);
   }
 
-  /*   const elem = useContext(DataContext);
-    for (let i = 0; i <= 10; i++) {
-      elem.toggleWasteList(1, 2);
-    } */
   let boxList = dataContext.boxList;
   let toggleStep = dataContext.toggleStep;
   return (
@@ -122,6 +122,7 @@ export default function Tetris(props: any) {
         <h2>{props.name}的临时垃圾箱</h2>
         <Space>
           <Button
+            color="default"
             size="small"
             onClick={() => {
               if (wasteList.filter((item) => item.used > 0).length === 0) {
@@ -153,13 +154,28 @@ export default function Tetris(props: any) {
           <div className="box-col" key={indexCol}>
             {boxCol.map((box: BoxList, indexRol: number) => (
               <div
-                className={box.refer !== 0 ? 'box used' : 'box'}
+                className={box.refer !== 0 ? 'box' : 'box unuse'}
                 key={indexCol * 4 + indexRol}
                 onClick={() => place(indexCol, indexRol)}
               >
-                #{indexCol * 6 + indexRol}
-                <br />
-                refer:{box.refer}
+                {/* {!box.refer ?
+                  <>
+                    #{indexCol * 6 + indexRol}
+                    <br />
+                    refer:{box.refer}
+                    <br />
+                    pos: {box.pos}
+                  </> :
+                  <Img num={WasteType[wasteList[box.refer - 1].type - 1].id} pos={box.pos} />
+                } */}
+                {!box.refer ? (
+                  <Image src={require('@/img/border_white_20.svg')} />
+                ) : (
+                  <Img
+                    num={WasteType[wasteList[box.refer - 1].type - 1].id}
+                    pos={box.pos}
+                  />
+                )}
               </div>
             ))}
           </div>

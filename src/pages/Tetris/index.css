@@ -7,7 +7,11 @@
 }
 
 .box {
-  border: 1px solid black;
+  overflow: hidden;
+}
+
+.unuse {
+  border: 1px solid var(--adm-color-white);
 }
 
 @media screen and (max-width: 500px) {
@@ -27,8 +31,4 @@
 .box-col {
   display: flex;
   flex-direction: column-reverse;
-}
-
-.used {
-  background-color: yellow;
 }
