@@ -1,4 +1,12 @@
-import { Card, Button, Space, Popover } from 'antd-mobile';
+import {
+  Card,
+  Button,
+  Space,
+  Popover,
+  Image,
+  SpinLoading,
+  Toast,
+} from 'antd-mobile';
 import './index.css';
 import { useState, useContext, createContext } from 'react';
 import { DataContext } from '@/pages';
@@ -80,7 +88,11 @@ function Bin(props: any) {
   function judge() {
     let { toggleWasteList, toggleCurSelect } = dataContext;
     if (dataContext.curSelect === 0) {
-      alert('你没有选择呢');
+      Toast.show({
+        content: '🚨你还没有选择呢',
+        position: 'top',
+        duration: 1000,
+      });
       return;
     }
     if (
@@ -89,15 +101,25 @@ function Bin(props: any) {
     )
       console.log(binInfo[props.type - 1].info);
     else {
-      console.log(
-        '你成功回收了',
-        binInfo[props.type - 1].name,
-        WasteType[dataContext.wasteList[dataContext.curSelect - 1].type - 1]
-          .name,
-      );
+      if (total != 1)
+        Toast.show({
+          content:
+            '✔️你回收了' +
+            WasteType[dataContext.wasteList[dataContext.curSelect - 1].type - 1]
+              .name,
+          position: 'top',
+          duration: 500,
+        });
       toggleCurSelect(0);
       toggleWasteList(dataContext.curSelect - 1, -2);
-      if (--total === 0) dataContext.toggleStep();
+      if (--total === 0) {
+        Toast.show({
+          icon: 'success',
+          content: '恭喜完成一次运输',
+          duration: 1000,
+        });
+        dataContext.toggleStep();
+      }
     }
   }
 
@@ -109,8 +131,10 @@ function Bin(props: any) {
       visible={dataContext.curSelect ? undefined : false}
     >
       <div className="bin" onClick={judge}>
-        <img></img>
-        {binInfo[props.type - 1].name}
+        <Image
+          src={require('@/img/bin' + String(props.index + 1) + '.svg')}
+          placeholder={<SpinLoading />}
+        />
       </div>
     </Popover>
   );
@@ -128,8 +152,13 @@ export default function Bins(props: any) {
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <TotalContext.Provider value={total}>
           <div className="bins">
-            {binInfo.map((item) => (
-              <Bin key={item.type} type={item.type} info={item.info} />
+            {binInfo.map((item, index) => (
+              <Bin
+                key={item.type}
+                type={item.type}
+                info={item.info}
+                index={index}
+              />
             ))}
           </div>
         </TotalContext.Provider>

@@ -2,11 +2,19 @@
   .bins {
     width: 88vw;
   }
+
+  .bin {
+    padding: 2vw;
+  }
 }
 
 @media screen and (min-width: 500px) {
   .bins {
-    width: calc(500px *0.88)
+    width: calc(500px * 0.88)
+  }
+
+  .bin {
+    padding: calc(500px * 0.03)
   }
 }
 
@@ -19,6 +27,4 @@
 .bin {
   width: 50%;
   height: 50%;
-  background-color: lightgray;
-  border: 1px solid var(--adm-color-white);
 }

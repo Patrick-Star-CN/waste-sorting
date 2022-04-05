@@ -4,6 +4,8 @@
   flex-flow: row wrap;
   justify-content: center;
   margin: 1vh 0;
+  border: 1px solid var(--adm-color-white);
+  padding: 2vw 0;
 }
 
 .box {
@@ -11,7 +13,7 @@
 }
 
 .unuse {
-  border: 1px solid var(--adm-color-white);
+  border: 1px dotted var(--adm-color-white)
 }
 
 @media screen and (max-width: 500px) {

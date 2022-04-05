@@ -3,7 +3,7 @@ import { DeleteOutline } from 'antd-mobile-icons';
 
 export default function Footer() {
   return (
-    <Space>
+    <Space block justify="center">
       <Button
         color="danger"
         size="small"
@@ -16,7 +16,6 @@ export default function Footer() {
         <DeleteOutline />
         清除缓存
       </Button>
-      <span>Copyright</span>
     </Space>
   );
 }

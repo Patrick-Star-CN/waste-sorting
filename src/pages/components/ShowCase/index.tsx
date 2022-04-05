@@ -1,9 +1,7 @@
 import './index.css';
-import { Card, Space, Tag } from 'antd-mobile';
-import { DataContext } from '@/pages';
-import { useContext, useEffect } from 'react';
-import { WasteType } from '@/pages';
-import { totalAll } from '@/pages';
+import { Card, Space, Tag, Empty, Image, SpinLoading } from 'antd-mobile';
+import { DataContext, WasteType, totalAll } from '@/pages';
+import { useContext } from 'react';
 
 export default function ShowCase(props: any) {
   const dataContext = useContext(DataContext);
@@ -22,34 +20,41 @@ export default function ShowCase(props: any) {
         ) : null}
       </Space>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <div className="showcase">
-          {wasteList.map((item, index) => {
-            if (
-              (dataContext.step === 1 && item.used === -1) ||
-              (dataContext.step === 2 && item.used >= 0)
-            )
-              return (
-                <div
-                  className={
-                    dataContext.curSelect === item.id
-                      ? 'waste-item selected'
-                      : 'waste-item'
-                  }
-                  key={index}
-                  onClick={() => dataContext.toggleCurSelect(item.id)}
-                >
-                  #{item.id}
-                  <br />
-                  {WasteType[item.type - 1].name}
-                  <br />
-                  width:{WasteType[item.type - 1].width}
-                  <br />
-                  height:{WasteType[item.type - 1].height}
-                </div>
-              );
-          })}
-          <div className="waste-item">没有垃圾了</div>
-        </div>
+        {wasteList.filter((item) => item.used === -1).length === 0 &&
+        dataContext.step === 1 ? (
+          <Empty description="没有待回收的垃圾了，快去运输吧🚚" />
+        ) : (
+          <div className="showcase">
+            {wasteList.map((item, index) => {
+              if (
+                (dataContext.step === 1 && item.used === -1) ||
+                (dataContext.step === 2 && item.used >= 0)
+              )
+                return (
+                  <div
+                    className={
+                      dataContext.curSelect === item.id
+                        ? 'waste-item selected'
+                        : 'waste-item'
+                    }
+                    key={index}
+                    onClick={() => dataContext.toggleCurSelect(item.id)}
+                  >
+                    高:{WasteType[item.type - 1].height} 宽:
+                    {WasteType[item.type - 1].width}
+                    <Image
+                      src={require('@/img/' +
+                        String(WasteType[item.type - 1].id) +
+                        '.svg')}
+                      height="80%"
+                      fit="scale-down"
+                      placeholder={<SpinLoading />}
+                    />
+                  </div>
+                );
+            })}
+          </div>
+        )}
       </div>
     </Card>
   );

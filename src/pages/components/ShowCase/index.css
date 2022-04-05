@@ -12,15 +12,19 @@
 
 .showcase {
   display: flex;
-  overflow: scroll;
+  overflow-x: scroll;
+  box-shadow: inset 6px 0px 20px 0px rgba(50, 50, 50, 0.9);
+  box-shadow: inset -6px 0px 20px 0px rgba(50, 50, 50, 0.9);
 }
 
 .waste-item {
   flex: 0 0 100px;
   height: 15vh;
-  border: 1px solid var(--adm-color-white);
+  border-left: 1px solid var(--smd-color-background-dark-layer4);
+  border-right: 1px solid var(--smd-color-background-dark-layer4);
+  padding: 0 .5rem;
 }
 
 .selected {
-  box-shadow: inset 1px 1px 10px 2px #409eff;
+  border-bottom: .3rem solid var(--adm-color-primary);
 }

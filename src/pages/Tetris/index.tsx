@@ -1,7 +1,15 @@
 import { useContext, useEffect, useState } from 'react';
 import { DataContext } from '..';
 import { WasteType } from '..';
-import { Button, Space, Card, Modal, Image } from 'antd-mobile';
+import {
+  Button,
+  Space,
+  Card,
+  Modal,
+  Image,
+  SpinLoading,
+  Toast,
+} from 'antd-mobile';
 import './index.css';
 import { totalAll } from '..';
 import { BoxList } from '..';
@@ -45,7 +53,11 @@ export default function Tetris(props: any) {
 
   function place(col: number, rol: number) {
     if (!dataContext.curSelect) {
-      alert('还没有选择呢！');
+      Toast.show({
+        content: '🚨你还没有选择呢',
+        position: 'top',
+        duration: 1000,
+      });
       return;
     }
     let width = WasteType[wasteList[dataContext.curSelect - 1].type - 1].width;
@@ -72,7 +84,11 @@ export default function Tetris(props: any) {
         }
         toggleStoreTop(curRolMax, col);
       } else {
-        alert('该列已经装不下了哦');
+        Toast.show({
+          content: '🚨该列已经装不下了',
+          position: 'top',
+          duration: 1000,
+        });
         return;
       }
     } else {
@@ -86,7 +102,11 @@ export default function Tetris(props: any) {
           height -
           1;
         if (newRol >= 6) {
-          alert('这样子好像装不下了哦');
+          Toast.show({
+            content: '🚨该列已经装不下了',
+            position: 'top',
+            duration: 1000,
+          });
           return;
         }
         let index = 1;
@@ -104,13 +124,22 @@ export default function Tetris(props: any) {
         for (let i = newCol; i <= newCol + width - 1; i++)
           toggleStoreTop(newRol + 1, i);
       } else {
-        alert('该列已经装不下了哦');
+        Toast.show({
+          content: '🚨该列已经装不下了',
+          position: 'top',
+          duration: 1000,
+        });
         return;
       }
       // TODO:
     }
-    console.log('你放置了', height, '*', width, '的垃圾');
-    console.log('垃圾桶状态为', dataContext.storeTop);
+    Toast.show({
+      content:
+        '你放置了' +
+        WasteType[wasteList[dataContext.curSelect - 1].type - 1].name,
+      position: 'bottom',
+      duration: 500,
+    });
     dataContext.toggleCurSelect(0);
   }
 
@@ -126,7 +155,11 @@ export default function Tetris(props: any) {
             size="small"
             onClick={() => {
               if (wasteList.filter((item) => item.used > 0).length === 0) {
-                alert('放点垃圾再去运输吧');
+                Toast.show({
+                  content: '放点垃圾再去运输吧',
+                  position: 'top',
+                  duration: 1000,
+                });
                 return;
               } else {
                 toggleStep();
@@ -158,18 +191,11 @@ export default function Tetris(props: any) {
                 key={indexCol * 4 + indexRol}
                 onClick={() => place(indexCol, indexRol)}
               >
-                {/* {!box.refer ?
-                  <>
-                    #{indexCol * 6 + indexRol}
-                    <br />
-                    refer:{box.refer}
-                    <br />
-                    pos: {box.pos}
-                  </> :
-                  <Img num={WasteType[wasteList[box.refer - 1].type - 1].id} pos={box.pos} />
-                } */}
                 {!box.refer ? (
-                  <Image src={require('@/img/border_white_20.svg')} />
+                  <Image
+                    src={require('@/img/border_white_20.svg')}
+                    placeholder={<SpinLoading />}
+                  />
                 ) : (
                   <Img
                     num={WasteType[wasteList[box.refer - 1].type - 1].id}
