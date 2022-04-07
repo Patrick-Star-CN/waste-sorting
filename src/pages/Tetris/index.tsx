@@ -17,6 +17,7 @@ import { BoxList } from '..';
 import Img from '../components/Img';
 import Rank from '../Rank';
 import axios from 'axios';
+import { host } from '..';
 
 export default function Tetris(props: any) {
   let dataContext = useContext(DataContext);
@@ -47,7 +48,7 @@ export default function Tetris(props: any) {
 
         axios({
           method: 'post',
-          url: 'http://localhost:8080/waste-sort/update',
+          url: host + '/waste-sort/update',
           data: {
             username: props.name,
             score: String(dataContext.score),

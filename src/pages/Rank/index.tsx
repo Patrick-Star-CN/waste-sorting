@@ -1,5 +1,5 @@
 import { Card, List, Space } from 'antd-mobile';
-import { record } from '..';
+import { record, host } from '..';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
@@ -12,7 +12,7 @@ export default function Rank(props: any) {
   const [rank, setRank] = useState<Rank[]>();
 
   useEffect(() => {
-    axios.get('http://localhost:8080/waste-sort/getData').then((response) => {
+    axios.get(host + '/waste-sort/getData').then((response) => {
       console.log(response);
       setRank((state) => response.data.data);
     });
@@ -28,7 +28,7 @@ export default function Rank(props: any) {
           <Space block justify="between">
             <h3>排名</h3>
             <h3>昵称</h3>
-            <h3>分数</h3>
+            <h3>运输次数</h3>
           </Space>
         </List.Item>
         {rank?.map((item, index) => (

@@ -7,6 +7,7 @@ import './index.css';
 import { Modal, Form, Input, ErrorBlock, Button, Space } from 'antd-mobile';
 import axios from 'axios';
 
+export const host = 'http://localhost:8080';
 type WasteList = {
   id: number;
   type: number;
@@ -158,28 +159,24 @@ export default function IndexPage() {
   };
 
   async function getChallenge() {
-    await axios
-      .get('http://localhost:8080/waste-sort/getChallenge')
-      .then((response) => {
-        for (let i = 0; i < response.data.data.length; i++) {
-          initialWasteList.push({
-            id: i + 1,
-            type: response.data.data[i].type,
-            used: -1,
-          });
-        }
-        setWasteList((state) => initialWasteList);
-        setStep((state) => state + 1);
-      });
+    await axios.get(host + '/waste-sort/getChallenge').then((response) => {
+      for (let i = 0; i < response.data.data.length; i++) {
+        initialWasteList.push({
+          id: i + 1,
+          type: response.data.data[i].type,
+          used: -1,
+        });
+      }
+      setWasteList((state) => initialWasteList);
+      setStep((state) => state + 1);
+    });
   }
   async function getDict() {
-    await axios
-      .get('http://localhost:8080/waste-sort/getDict')
-      .then((response) => {
-        console.log(response);
-        WasteType = response.data;
-        setStep((state) => state + 1);
-      });
+    await axios.get(host + '/waste-sort/getDict').then((response) => {
+      console.log(response);
+      WasteType = response.data;
+      setStep((state) => state + 1);
+    });
   }
   useEffect(() => {
     getDict();
