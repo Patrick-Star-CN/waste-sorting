@@ -9,6 +9,7 @@ import {
   Image,
   SpinLoading,
   Toast,
+  Result,
 } from 'antd-mobile';
 import './index.css';
 import { totalAll } from '..';
@@ -24,7 +25,20 @@ export default function Tetris(props: any) {
 
   useEffect(() => {
     if (totalToRecycle === totalAll) {
-      alert('game over! your step number: ' + dataContext.score);
+      Modal.alert({
+        onConfirm: () => {
+          window.location.reload();
+        },
+        content: (
+          <Result
+            status="success"
+            title="今日美化任务已完成！"
+            description={
+              '你最终的运输次数为 ' + String(dataContext.score) + ' 次'
+            }
+          />
+        ),
+      });
       if (
         !localStorage.getItem('WASTESORTING_RECORD') ||
         Number(localStorage.getItem('WASTESORTING_RECORD')) > dataContext.score
@@ -40,7 +54,6 @@ export default function Tetris(props: any) {
           },
         });
       }
-      window.location.reload();
     }
     return () => {
       for (let i = 0; i < 4; i++)

@@ -18,10 +18,8 @@
 }
 
 h2,
-h3,
-span {
+h3 {
   display: inline;
-  /* color: var(--adm-color-white); */
   color: #b2e58b;
 }
 
@@ -62,6 +60,10 @@ h3 {
   border: 2px solid var(--adm-color-white);
 }
 
-body {
+.adm-result {
   background-color: var(--smd-color-background-dark-layer1);
+}
+
+body {
+  background-color: var(--smd-color-background-dark-layer0);
 }

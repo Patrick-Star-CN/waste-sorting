@@ -4,7 +4,7 @@ import ShowCase from './components/ShowCase';
 import Bins from './components/Bins';
 import Footer from './components/Footer';
 import './index.css';
-import { Modal, Form, Input, Button, Space, ErrorBlock } from 'antd-mobile';
+import { Modal, Form, Input, ErrorBlock, Button, Space } from 'antd-mobile';
 import axios from 'axios';
 
 type WasteList = {
@@ -65,34 +65,45 @@ export let DataContext = createContext(initialData);
 export let totalAll = 0;
 export let record = 0;
 export default function IndexPage() {
-  const [form] = Form.useForm();
+  let [step, setStep] = useState(-1); // 1 表示第一阶段，2 表示第二阶段
   useEffect(() => {
     // TODO: getData
-    if (localStorage.getItem('WASTESORTING_USERNAME') === null) {
-      Modal.alert({
+    if (step == 1 && localStorage.getItem('WASTESORTING_USERNAME') === null) {
+      Modal.show({
         header: <h1>👋</h1>,
         title: '欢迎',
         content: (
-          <Form form={form} mode="card">
+          <Form
+            mode="card"
+            onFinish={(value: any) => {
+              setUserName(value.name);
+              localStorage.setItem('WASTESORTING_USERNAME', value.name);
+              Modal.clear();
+            }}
+            footer={
+              <Button
+                block
+                type="submit"
+                color="primary"
+                size="large"
+                onClick={() => {}}
+              >
+                开始游戏
+              </Button>
+            }
+          >
             <Form.Item
               name="name"
               label="昵称"
               rules={[
                 { required: true },
-                { max: 8, message: '输入8个字符长度以下的昵称' },
+                { min: 1, max: 8, message: '输入8个字符长度以下的昵称' },
               ]}
             >
-              <Input placeholder="昵称最多8个字符"></Input>
+              <Input autoComplete="off" placeholder="昵称最多8个字符"></Input>
             </Form.Item>
           </Form>
         ),
-        onConfirm: () => {
-          setUserName(form.getFieldValue('name'));
-          localStorage.setItem(
-            'WASTESORTING_USERNAME',
-            form.getFieldValue('name'),
-          );
-        },
       });
     } else {
       let tmp = localStorage.getItem('WASTESORTING_USERNAME');
@@ -103,12 +114,11 @@ export default function IndexPage() {
       record = Number(localStorage.getItem('WASTESORTING_RECORD'));
       console.log(record);
     }
-  }, []);
+  }, [step === 1]);
 
   let [score, setScore] = useState(initialScore);
   let [storeTop, setStoreTop] = useState(initialStoreTop);
   let [boxList, setBoxList] = useState(initialBoxList);
-  let [step, setStep] = useState(-1); // 1 表示第一阶段，2 表示第二阶段
   let [wasteList, setWasteList] = useState(initialWasteList);
   let [curSelect, setCurSelect] = useState(0);
   let [userName, setUserName] = useState('');
@@ -135,7 +145,6 @@ export default function IndexPage() {
     setBoxList((state) => {
       let new_state = state;
       new_state[col][rol] = { refer, type, pos };
-      // console.log(new_state)
       return new_state;
     });
   };
@@ -203,11 +212,12 @@ export default function IndexPage() {
             toggleStep,
           }}
         >
-          {step == 1 ? <Tetris name={userName} /> : <Bins />}
+          {step === 1 ? <Tetris name={userName} /> : <Bins />}
           <ShowCase />
         </DataContext.Provider>
         <Footer />
       </div>
     );
-  else return <ErrorBlock fullPage />;
+  else if (step <= 0) return <ErrorBlock status="busy" fullPage />;
+  else return null;
 }
