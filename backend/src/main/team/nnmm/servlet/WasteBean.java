@@ -11,7 +11,7 @@ public class WasteBean implements Serializable {
     private int id;
     private int width;
     private int height;
-    private String type;
+    private int type;
 
     public String getName() {
         return name;
@@ -45,15 +45,15 @@ public class WasteBean implements Serializable {
         this.height = height;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 
-    public WasteBean(String name, int id, int width, int height, String type) {
+    public WasteBean(String name, int id, int width, int height, int type) {
         this.name = name;
         this.id = id;
         this.width = width;

@@ -148,7 +148,7 @@ export default function IndexPage() {
   useEffect(() => {
     async function getChallenge() {
       await axios
-        .get('http://localhost:8080/waste-sort/getChallenge')
+        .get('http://127.0.0.1:8080/waste-sort/getChallenge')
         .then((response) => {
           console.log(response);
           for (let i = 0; i < response.data.data.length; i++) {
