@@ -64,6 +64,11 @@ h3 {
   background-color: var(--smd-color-background-dark-layer1);
 }
 
+.adm-popup-body {
+  background-color: var(--smd-color-background-dark-layer0);
+  border: 2px solid var(--adm-color-white);
+}
+
 body {
   background-color: var(--smd-color-background-dark-layer0);
 }

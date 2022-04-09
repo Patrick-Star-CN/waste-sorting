@@ -1,16 +1,9 @@
-import {
-  Card,
-  Button,
-  Space,
-  Popover,
-  Image,
-  SpinLoading,
-  Toast,
-} from 'antd-mobile';
+import { Card, Space, Popover, Toast } from 'antd-mobile';
 import './index.css';
-import { useState, useContext, createContext } from 'react';
+import { useContext, createContext } from 'react';
 import { DataContext } from '@/pages';
 import { WasteType } from '@/pages';
+import Img from '../Img';
 
 const TotalContext = createContext(0);
 const binInfo = [
@@ -96,11 +89,9 @@ function Bin(props: any) {
       return;
     }
     if (
-      props.type !=
+      props.type ===
       WasteType[dataContext.wasteList[dataContext.curSelect - 1].type - 1].type
-    )
-      console.log(binInfo[props.type - 1].info);
-    else {
+    ) {
       if (total != 1)
         Toast.show({
           content:
@@ -131,10 +122,7 @@ function Bin(props: any) {
       visible={dataContext.curSelect ? undefined : false}
     >
       <div className="bin" onClick={judge}>
-        <Image
-          src={require('@/img/bin' + String(props.index + 1) + '.svg')}
-          placeholder={<SpinLoading />}
-        />
+        <Img num={props.index + 1} type={3}></Img>
       </div>
     </Popover>
   );

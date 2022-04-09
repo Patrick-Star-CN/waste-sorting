@@ -3,8 +3,9 @@ import Tetris from './Tetris';
 import ShowCase from './components/ShowCase';
 import Bins from './components/Bins';
 import Footer from './components/Footer';
+import Guide from './components/Guide';
 import './index.css';
-import { Modal, Form, Input, ErrorBlock, Button, Space } from 'antd-mobile';
+import { Modal, Form, Input, ErrorBlock, Button } from 'antd-mobile';
 import axios from 'axios';
 
 export const host = 'http://localhost:8080';
@@ -47,6 +48,7 @@ const initialData = {
   wasteList: initialWasteList,
   curSelect: 0,
   step: 0,
+  promptVisible: false,
   toggleScore: () => {},
   toggleStoreTop: (top: number, col: number) => {},
   toggleBoxList: (
@@ -59,6 +61,7 @@ const initialData = {
   toggleWasteList: (id: number, pos: number) => {},
   toggleStep: () => {},
   toggleCurSelect: (id: number) => {},
+  togglePromptVisible: (state: boolean) => {},
 };
 
 export let WasteType: WasteType[] = [];
@@ -68,7 +71,6 @@ export let record = 0;
 export default function IndexPage() {
   let [step, setStep] = useState(-1); // 1 表示第一阶段，2 表示第二阶段
   useEffect(() => {
-    // TODO: getData
     if (step == 1 && localStorage.getItem('WASTESORTING_USERNAME') === null) {
       Modal.show({
         header: <h1>👋</h1>,
@@ -123,13 +125,13 @@ export default function IndexPage() {
   let [wasteList, setWasteList] = useState(initialWasteList);
   let [curSelect, setCurSelect] = useState(0);
   let [userName, setUserName] = useState('');
+  let [promptVisible, setPromptVisible] = useState(false);
   totalAll = initialWasteList.length;
 
   let toggleScore = () => {
     setScore((state) => state + 1);
   };
   let toggleStoreTop = (top: number, col: number) => {
-    // console.log('top:', top, 'col:', col);
     setStoreTop((state) => {
       let new_state = state;
       new_state[col] = top;
@@ -154,10 +156,11 @@ export default function IndexPage() {
     setCurSelect(id);
   };
   let toggleStep = () => {
-    console.log('step', step);
     setStep((state) => 3 - state);
   };
-
+  let togglePromptVisible = (state: boolean) => {
+    setPromptVisible(state);
+  };
   async function getChallenge() {
     await axios.get(host + '/waste-sort/getChallenge').then((response) => {
       for (let i = 0; i < response.data.data.length; i++) {
@@ -173,7 +176,6 @@ export default function IndexPage() {
   }
   async function getDict() {
     await axios.get(host + '/waste-sort/getDict').then((response) => {
-      console.log(response);
       WasteType = response.data;
       setStep((state) => state + 1);
     });
@@ -201,18 +203,24 @@ export default function IndexPage() {
             wasteList,
             curSelect,
             step,
+            promptVisible,
             toggleScore,
             toggleStoreTop,
             toggleBoxList,
             toggleWasteList,
             toggleCurSelect,
             toggleStep,
+            togglePromptVisible,
           }}
         >
           {step === 1 ? <Tetris name={userName} /> : <Bins />}
           <ShowCase />
         </DataContext.Provider>
-        <Footer />
+        <Footer togglePromptVisible={togglePromptVisible} />
+        <Guide
+          visible={promptVisible}
+          togglePromptVisible={togglePromptVisible}
+        />
       </div>
     );
   else if (step <= 0) return <ErrorBlock status="busy" fullPage />;

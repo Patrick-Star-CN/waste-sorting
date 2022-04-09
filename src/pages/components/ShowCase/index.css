@@ -18,8 +18,8 @@
 }
 
 .waste-item {
-  flex: 0 0 100px;
-  height: 15vh;
+  flex: 0 0 7rem;
+  height: 16vh;
   border-left: 1px solid var(--smd-color-background-dark-layer4);
   border-right: 1px solid var(--smd-color-background-dark-layer4);
   padding: 0 .5rem;

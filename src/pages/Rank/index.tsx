@@ -13,7 +13,6 @@ export default function Rank(props: any) {
 
   useEffect(() => {
     axios.get(host + '/waste-sort/getData').then((response) => {
-      console.log(response);
       setRank((state) => response.data.data);
     });
   }, []);

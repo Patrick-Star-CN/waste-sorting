@@ -1,7 +1,8 @@
 import './index.css';
-import { Card, Space, Tag, Empty, Image, SpinLoading } from 'antd-mobile';
+import { Card, Space, Tag, Empty } from 'antd-mobile';
 import { DataContext, WasteType, totalAll } from '@/pages';
 import { useContext } from 'react';
+import Img from '../Img';
 
 export default function ShowCase(props: any) {
   const dataContext = useContext(DataContext);
@@ -40,16 +41,14 @@ export default function ShowCase(props: any) {
                     key={index}
                     onClick={() => dataContext.toggleCurSelect(item.id)}
                   >
-                    高:{WasteType[item.type - 1].height} 宽:
-                    {WasteType[item.type - 1].width}
-                    <Image
-                      src={require('@/img/' +
-                        String(WasteType[item.type - 1].id) +
-                        '.svg')}
-                      height="80%"
-                      fit="scale-down"
-                      placeholder={<SpinLoading />}
-                    />
+                    <Space>
+                      <span>{WasteType[item.type - 1].name}</span>
+                      <Tag fill="outline">
+                        {WasteType[item.type - 1].height} ×{' '}
+                        {WasteType[item.type - 1].width}
+                      </Tag>
+                    </Space>
+                    <Img num={WasteType[item.type - 1].id} type={2} />
                   </div>
                 );
             })}

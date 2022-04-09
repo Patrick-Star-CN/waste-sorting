@@ -25,6 +25,16 @@ export default function Tetris(props: any) {
   const totalToRecycle = wasteList.filter((item) => item.used === -2).length;
 
   useEffect(() => {
+    if (
+      dataContext.score === 0 &&
+      localStorage.getItem('WASTESORTING_RECORD') === null
+    ) {
+      // 新手引导
+      dataContext.togglePromptVisible(true);
+    }
+  }, []);
+
+  useEffect(() => {
     if (totalToRecycle === totalAll) {
       Modal.alert({
         onConfirm: () => {
@@ -206,14 +216,12 @@ export default function Tetris(props: any) {
                 onClick={() => place(indexCol, indexRol)}
               >
                 {!box.refer ? (
-                  <Image
-                    src={require('@/img/border_white_20.svg')}
-                    placeholder={<SpinLoading />}
-                  />
+                  <Img type={4} />
                 ) : (
                   <Img
                     num={WasteType[wasteList[box.refer - 1].type - 1].id}
                     pos={box.pos}
+                    type={1}
                   />
                 )}
               </div>
