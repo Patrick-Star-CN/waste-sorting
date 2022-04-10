@@ -1,10 +1,11 @@
 import { Space, Button } from 'antd-mobile';
 import { DeleteOutline } from 'antd-mobile-icons';
 
-export default function Footer() {
+export default function Footer(props: any) {
   return (
-    <Space>
+    <Space block justify="center">
       <Button
+        color="danger"
         size="small"
         onClick={() => {
           localStorage.removeItem('WASTESORTING_RECORD');
@@ -15,7 +16,15 @@ export default function Footer() {
         <DeleteOutline />
         清除缓存
       </Button>
-      <span>Copyright</span>
+      <Button
+        color="primary"
+        size="small"
+        onClick={() => {
+          props.togglePromptVisible(true);
+        }}
+      >
+        指引
+      </Button>
     </Space>
   );
 }

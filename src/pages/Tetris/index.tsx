@@ -1,10 +1,23 @@
 import { useContext, useEffect, useState } from 'react';
 import { DataContext } from '..';
 import { WasteType } from '..';
-import { Button, Space, Card } from 'antd-mobile';
+import {
+  Button,
+  Space,
+  Card,
+  Modal,
+  Image,
+  SpinLoading,
+  Toast,
+  Result,
+} from 'antd-mobile';
 import './index.css';
 import { totalAll } from '..';
 import { BoxList } from '..';
+import Img from '../components/Img';
+import Rank from '../Rank';
+import axios from 'axios';
+import { host } from '..';
 
 export default function Tetris(props: any) {
   let dataContext = useContext(DataContext);
@@ -12,19 +25,57 @@ export default function Tetris(props: any) {
   const totalToRecycle = wasteList.filter((item) => item.used === -2).length;
 
   useEffect(() => {
+    if (
+      dataContext.score === 0 &&
+      localStorage.getItem('WASTESORTING_RECORD') === null
+    ) {
+      // 新手引导
+      dataContext.togglePromptVisible(true);
+      localStorage.setItem(
+        'WASTESORTING_RECORD',
+        String(dataContext.score) + '&' + new Date().toLocaleDateString(),
+      );
+    }
+  }, []);
+
+  useEffect(() => {
     if (totalToRecycle === totalAll) {
-      alert('game over! your step number: ' + dataContext.score);
+      Modal.alert({
+        onConfirm: () => {
+          window.location.reload();
+        },
+        content: (
+          <Result
+            status="success"
+            title="今日美化任务已完成！"
+            description={
+              '你最终的运输次数为 ' + String(dataContext.score) + ' 次'
+            }
+          />
+        ),
+      });
       if (
-        localStorage.getItem('WASTESORTING_RECORD') &&
-        Number(localStorage.getItem('WASTESORTING_RECORD')) > dataContext.score
+        localStorage.getItem('WASTESORTING_RECORD')?.split('&')[0] === '0' ||
+        Number(localStorage.getItem('WASTESORTING_RECORD')?.split('&')[0]) >
+          dataContext.score
       ) {
-        localStorage.setItem('WASTESORTING_RECORD', String(dataContext.score));
+        localStorage.setItem(
+          'WASTESORTING_RECORD',
+          String(dataContext.score) + '&' + new Date().toLocaleDateString(),
+        );
+        axios({
+          method: 'post',
+          url: host + '/waste-sort/update',
+          data: {
+            username: props.name,
+            score: String(dataContext.score),
+          },
+        });
       }
-      window.location.reload();
     }
     return () => {
       for (let i = 0; i < 4; i++)
-        for (let j = 0; j < 6; j++) dataContext.toggleBoxList(i, j, 0, 0);
+        for (let j = 0; j < 6; j++) dataContext.toggleBoxList(i, j, 0, 0, 0);
 
       for (let i = 0; i < 4; i++) dataContext.toggleStoreTop(0, i);
       dataContext.toggleScore();
@@ -33,7 +84,11 @@ export default function Tetris(props: any) {
 
   function place(col: number, rol: number) {
     if (!dataContext.curSelect) {
-      alert('还没有选择呢！');
+      Toast.show({
+        content: '🚨你还没有选择呢',
+        position: 'top',
+        duration: 1000,
+      });
       return;
     }
     let width = WasteType[wasteList[dataContext.curSelect - 1].type - 1].width;
@@ -48,17 +103,23 @@ export default function Tetris(props: any) {
       if (curRolMax <= 6) {
         toggleWasteList(dataContext.curSelect - 1, col * 6 + curRolMax);
 
+        let index = 1;
         for (let i = dataContext.storeTop[col]; i < curRolMax; i++) {
           toggleBoxList(
             col,
             i,
             dataContext.curSelect,
             wasteList[dataContext.curSelect - 1].type,
+            index++,
           );
         }
         toggleStoreTop(curRolMax, col);
       } else {
-        alert('该列已经装不下了哦');
+        Toast.show({
+          content: '🚨该列已经装不下了',
+          position: 'top',
+          duration: 1000,
+        });
         return;
       }
     } else {
@@ -67,42 +128,52 @@ export default function Tetris(props: any) {
         let newRol = rol;
         let newCol = col;
         if (newCol + width >= 4) newCol = 4 - width; // 矫正
-        // console.log("max", Math.max(...dataContext.storeTop.slice(newCol, newCol + width)));
         newRol =
           Math.max(...dataContext.storeTop.slice(newCol, newCol + width)) +
           height -
           1;
         if (newRol >= 6) {
-          alert('这样子好像装不下了哦');
+          Toast.show({
+            content: '🚨该列已经装不下了',
+            position: 'top',
+            duration: 1000,
+          });
           return;
         }
+        let index = 1;
         for (let i = newCol; i <= newCol + width - 1; i++) {
-          for (let j = newRol; j >= newRol - height + 1; j--) {
+          for (let j = newRol - height + 1; j <= newRol; j++) {
             toggleBoxList(
               i,
               j,
               dataContext.curSelect,
               wasteList[dataContext.curSelect - 1].type,
+              index++,
             );
           }
         }
         for (let i = newCol; i <= newCol + width - 1; i++)
           toggleStoreTop(newRol + 1, i);
       } else {
-        alert('该列已经装不下了哦');
+        Toast.show({
+          content: '🚨该列已经装不下了',
+          position: 'top',
+          duration: 1000,
+        });
         return;
       }
       // TODO:
     }
-    console.log('你放置了', height, '*', width, '的垃圾');
-    console.log('垃圾桶状态为', dataContext.storeTop);
+    Toast.show({
+      content:
+        '你放置了' +
+        WasteType[wasteList[dataContext.curSelect - 1].type - 1].name,
+      position: 'bottom',
+      duration: 500,
+    });
     dataContext.toggleCurSelect(0);
   }
 
-  /*   const elem = useContext(DataContext);
-    for (let i = 0; i <= 10; i++) {
-      elem.toggleWasteList(1, 2);
-    } */
   let boxList = dataContext.boxList;
   let toggleStep = dataContext.toggleStep;
   return (
@@ -111,10 +182,15 @@ export default function Tetris(props: any) {
         <h2>{props.name}的临时垃圾箱</h2>
         <Space>
           <Button
+            color="default"
             size="small"
             onClick={() => {
               if (wasteList.filter((item) => item.used > 0).length === 0) {
-                alert('放点垃圾再去运输吧');
+                Toast.show({
+                  content: '放点垃圾再去运输吧',
+                  position: 'top',
+                  duration: 1000,
+                });
                 return;
               } else {
                 toggleStep();
@@ -123,7 +199,16 @@ export default function Tetris(props: any) {
           >
             🚚
           </Button>
-          <Button size="small" color="primary">
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => {
+              Modal.show({
+                content: <Rank />,
+                closeOnMaskClick: true,
+              });
+            }}
+          >
             排行榜
           </Button>
         </Space>
@@ -133,13 +218,19 @@ export default function Tetris(props: any) {
           <div className="box-col" key={indexCol}>
             {boxCol.map((box: BoxList, indexRol: number) => (
               <div
-                className={box.refer !== 0 ? 'box used' : 'box'}
+                className={box.refer !== 0 ? 'box' : 'box unuse'}
                 key={indexCol * 4 + indexRol}
                 onClick={() => place(indexCol, indexRol)}
               >
-                #{indexCol * 6 + indexRol}
-                <br />
-                refer:{box.refer}
+                {!box.refer ? (
+                  <Img type={4} />
+                ) : (
+                  <Img
+                    num={WasteType[wasteList[box.refer - 1].type - 1].id}
+                    pos={box.pos}
+                    type={1}
+                  />
+                )}
               </div>
             ))}
           </div>

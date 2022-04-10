@@ -1,9 +1,8 @@
 import './index.css';
-import { Card, Space, Tag } from 'antd-mobile';
-import { DataContext } from '@/pages';
-import { useContext, useEffect } from 'react';
-import { WasteType } from '@/pages';
-import { totalAll } from '@/pages';
+import { Card, Space, Tag, Empty } from 'antd-mobile';
+import { DataContext, WasteType, totalAll } from '@/pages';
+import { useContext } from 'react';
+import Img from '../Img';
 
 export default function ShowCase(props: any) {
   const dataContext = useContext(DataContext);
@@ -22,34 +21,39 @@ export default function ShowCase(props: any) {
         ) : null}
       </Space>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <div className="showcase">
-          {wasteList.map((item, index) => {
-            if (
-              (dataContext.step === 1 && item.used === -1) ||
-              (dataContext.step === 2 && item.used >= 0)
-            )
-              return (
-                <div
-                  className={
-                    dataContext.curSelect === item.id
-                      ? 'waste-item selected'
-                      : 'waste-item'
-                  }
-                  key={index}
-                  onClick={() => dataContext.toggleCurSelect(item.id)}
-                >
-                  #{item.id}
-                  <br />
-                  {WasteType[item.type - 1].name}
-                  <br />
-                  width:{WasteType[item.type - 1].width}
-                  <br />
-                  height:{WasteType[item.type - 1].height}
-                </div>
-              );
-          })}
-          <div className="waste-item">没有垃圾了</div>
-        </div>
+        {wasteList.filter((item) => item.used === -1).length === 0 &&
+        dataContext.step === 1 ? (
+          <Empty description="没有待回收的垃圾了，快去运输吧🚚" />
+        ) : (
+          <div className="showcase">
+            {wasteList.map((item, index) => {
+              if (
+                (dataContext.step === 1 && item.used === -1) ||
+                (dataContext.step === 2 && item.used >= 0)
+              )
+                return (
+                  <div
+                    className={
+                      dataContext.curSelect === item.id
+                        ? 'waste-item selected'
+                        : 'waste-item'
+                    }
+                    key={index}
+                    onClick={() => dataContext.toggleCurSelect(item.id)}
+                  >
+                    <Space>
+                      <span>{WasteType[item.type - 1].name}</span>
+                      <Tag fill="outline">
+                        {WasteType[item.type - 1].height} ×{' '}
+                        {WasteType[item.type - 1].width}
+                      </Tag>
+                    </Space>
+                    <Img num={WasteType[item.type - 1].id} type={2} />
+                  </div>
+                );
+            })}
+          </div>
+        )}
       </div>
     </Card>
   );
