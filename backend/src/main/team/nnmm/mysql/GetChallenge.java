@@ -1,14 +1,12 @@
 package team.nnmm.mysql;
 
 import team.nnmm.servlet.ChallengeBean;
-import team.nnmm.servlet.WasteBean;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Random;
 
 /**
@@ -26,7 +24,7 @@ public class GetChallenge {
             re = psql.executeQuery();
             if(re.isBeforeFirst()) {
                 re.last();
-                int length = re.getRow();
+                int length = 14;//re.getRow();
                 int n = 0;
                 long  t = System.currentTimeMillis();
                 Random rand = new Random(t);

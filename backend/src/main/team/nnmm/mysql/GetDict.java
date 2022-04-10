@@ -23,7 +23,7 @@ public class GetDict {
             re = psql.executeQuery();
             if(re.isBeforeFirst()) {
                 while(re.next()) {
-                    WasteBean result_ = new WasteBean(re.getString("name"), re.getInt("id"), re.getInt("width"), re.getInt("height"), re.getString("type"));
+                    WasteBean result_ = new WasteBean(re.getString("name"), re.getInt("id"), re.getInt("width"), re.getInt("height"), re.getInt("type"));
                     result.add(result_);
                 }
             } else {

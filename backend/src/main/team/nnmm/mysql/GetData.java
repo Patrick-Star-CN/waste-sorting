@@ -19,7 +19,7 @@ public class GetData {
         ResultSet re = null;
         ArrayList<ScoreBean> result = new ArrayList<>();
         try {
-            String sql = "select * from ranking order by score desc";
+            String sql = "select * from ranking order by score";
             psql = conn.prepareStatement(sql);
             re = psql.executeQuery();
             if(re.isBeforeFirst()) {
