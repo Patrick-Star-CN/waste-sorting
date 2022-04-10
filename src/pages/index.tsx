@@ -114,8 +114,15 @@ export default function IndexPage() {
     }
 
     if (localStorage.getItem('WASTESORTING_RECORD')) {
-      record = Number(localStorage.getItem('WASTESORTING_RECORD'));
-      console.log(record);
+      const recordDate = localStorage
+        .getItem('WASTESORTING_RECORD')
+        ?.split('&')[1];
+      const todayDate = new Date().toLocaleDateString();
+      if (recordDate === todayDate)
+        record = Number(
+          localStorage.getItem('WASTESORTING_RECORD')?.split('&')[0],
+        );
+      else localStorage.setItem('WASTESORTING_RECORD', '0&' + todayDate);
     }
   }, [step === 1]);
 

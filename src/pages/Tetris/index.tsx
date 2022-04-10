@@ -31,6 +31,10 @@ export default function Tetris(props: any) {
     ) {
       // 新手引导
       dataContext.togglePromptVisible(true);
+      localStorage.setItem(
+        'WASTESORTING_RECORD',
+        String(dataContext.score) + '&' + new Date().toLocaleDateString(),
+      );
     }
   }, []);
 
@@ -51,11 +55,14 @@ export default function Tetris(props: any) {
         ),
       });
       if (
-        !localStorage.getItem('WASTESORTING_RECORD') ||
-        Number(localStorage.getItem('WASTESORTING_RECORD')) > dataContext.score
+        localStorage.getItem('WASTESORTING_RECORD')?.split('&')[0] === '0' ||
+        Number(localStorage.getItem('WASTESORTING_RECORD')?.split('&')[0]) >
+          dataContext.score
       ) {
-        localStorage.setItem('WASTESORTING_RECORD', String(dataContext.score));
-
+        localStorage.setItem(
+          'WASTESORTING_RECORD',
+          String(dataContext.score) + '&' + new Date().toLocaleDateString(),
+        );
         axios({
           method: 'post',
           url: host + '/waste-sort/update',
